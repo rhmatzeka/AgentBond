@@ -2,7 +2,7 @@
 @theme {
   --color-brand-green: #00d4a4;
   --color-brand-green-deep: #00b48a;
-  --color-canvas-dark: #020b0e;
+  --color-canvas-dark: #01090d;
   --color-surface-code: #0b1519;
   --color-hairline-dark: #12252c;
   --font-sans: var(--font-geist-sans), Inter, sans-serif;
@@ -10,16 +10,15 @@
 }
 
 :root {
-  --background: #020b0e;
+  --background: #01090d;
   --foreground: #ffffff;
 }
 
 body {
-  background-color: #020b0e;
+  background-color: #01090d;
   color: #ffffff;
   font-family: var(--font-sans);
   overflow-x: hidden;
-  position: relative;
 }
 
 ::selection {
@@ -27,22 +26,19 @@ body {
   color: #0a0a0a;
 }
 
-/* Dots background pattern matching Vibedesign */
-.dots-bg {
-  background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-    radial-gradient(rgba(255, 255, 255, 0.1) 1.5px, transparent 1.5px);
-  background-size: 40px 40px, 80px 80px;
-  background-position: 0 0, 20px 20px;
-}
-
-/* Linear & radial background blends */
-.bg-vibe-gradient {
-  background: radial-gradient(circle at 50% -100px, #0e3d48 0%, #03141a 60%, #020b0e 100%);
+/* Single combined background matching Vibedesign exactly (Teal glow + Subtle stars grid) */
+.bg-vibe-theme {
+  background: 
+    /* Top layer: Subtle star/dot pattern grid */
+    radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) repeat,
+    /* Bottom layer: Rich cyan-teal radial glow centered at the top-middle */
+    radial-gradient(circle at 50% 0px, #0b4352 0%, #031720 50%, #01090d 100%);
+  background-size: 36px 36px, auto;
+  background-attachment: scroll, scroll;
 }
 
 .bg-panel-glow {
-  background: linear-gradient(180deg, rgba(14, 61, 72, 0.2) 0%, rgba(3, 20, 26, 0.4) 100%);
+  background: linear-gradient(180deg, rgba(11, 67, 82, 0.25) 0%, rgba(3, 23, 32, 0.4) 100%);
   border: 1px solid rgba(0, 212, 164, 0.15);
 }
 
@@ -50,6 +46,6 @@ body {
   transition: all 0.3s ease;
 }
 .glow-hover:hover {
-  box-shadow: 0 0 30px rgba(0, 212, 164, 0.25);
-  border-color: rgba(0, 212, 164, 0.6);
+  box-shadow: 0 0 30px rgba(0, 212, 164, 0.2);
+  border-color: rgba(0, 212, 164, 0.5);
 }

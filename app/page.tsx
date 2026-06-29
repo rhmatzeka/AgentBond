@@ -62,11 +62,8 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-vibe-gradient dots-bg text-white relative">
-      {/* Subtle top glow ring */}
-      <div className="absolute top-0 left-1/2 -z-10 h-[450px] w-full max-w-7xl -translate-x-1/2 opacity-25 [background-image:radial-gradient(circle_at_top,#00d4a4_0%,transparent_60%)]" />
-
-      {/* Header matching Image 2 */}
+    <main className="min-h-screen bg-vibe-theme text-white relative">
+      {/* Header matching Image 1 */}
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00d4a4] font-mono text-sm font-semibold text-black shadow-[0_0_15px_rgba(0,212,164,0.3)]">AB</div>
@@ -87,10 +84,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Display matching Image 2 */}
+      {/* Hero Display matching Image 1 */}
       <section className="mx-auto max-w-7xl px-6 pt-16 pb-12 text-center md:pt-24">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#00d4a4]/30 bg-[#00d4a4]/10 px-3.5 py-1 text-xs font-mono text-[#00d4a4] mb-8 shadow-[0_0_15px_rgba(0,212,164,0.1)]">
-          <span className="font-semibold uppercase tracking-wider text-[10px]">NEW</span>
+          <span className="font-semibold uppercase tracking-wider text-[10px] bg-[#00d4a4] text-black px-1.5 py-0.5 rounded-sm">NEW</span>
           <span className="text-zinc-300">|</span>
           <span className="text-zinc-300">Trust layer for paid agent-to-agent transactions ✨</span>
         </div>
@@ -102,7 +99,7 @@ export default function Home() {
           Generate scorecards, previews, and registered report proofs on Base Sepolia.
         </p>
 
-        {/* Email/Action Bar matching Image 2 */}
+        {/* Email/Action Bar matching Image 1 */}
         <div className="mx-auto mt-10 max-w-xl">
           <div className="flex p-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-2xl focus-within:border-[#00d4a4]/40 transition">
             <input 
@@ -126,7 +123,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Main Panel Area matching Image 2 guide/api style */}
+      {/* Main Panel Area matching Image 1 guide/api style */}
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="rounded-3xl border border-white/10 bg-[#061216]/80 backdrop-blur-lg shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden">
           
