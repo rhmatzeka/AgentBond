@@ -62,75 +62,87 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-vibe-theme text-white relative">
-      {/* Header matching Image 1 */}
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00d4a4] font-mono text-sm font-semibold text-black shadow-[0_0_15px_rgba(0,212,164,0.3)]">AB</div>
-          <span className="font-semibold tracking-tight text-lg text-white">AgentBond AI</span>
-        </div>
-        
-        {/* Centered Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
-          <a href="#" className="hover:text-white transition">Resources</a>
-          <a href="/demo" className="hover:text-white transition">Documentation</a>
-          <a href="#" className="hover:text-white transition">Customers</a>
-          <a href="#" className="hover:text-white transition">Blog</a>
-          <a href="#" className="hover:text-white transition">Pricing</a>
-        </nav>
+    <main className="min-h-screen bg-vibe-theme dots-bg text-white relative flex flex-col justify-between">
+      {/* Subtle top glow ring */}
+      <div className="absolute top-0 left-1/2 -z-10 h-[400px] w-full max-w-7xl -translate-x-1/2 opacity-25 [background-image:radial-gradient(circle_at_top,#00d4a4_0%,transparent_60%)]" />
 
-        <div className="flex items-center gap-3">
-          <WalletConnectButton />
-        </div>
-      </header>
-
-      {/* Hero Display matching Image 1 */}
-      <section className="mx-auto max-w-7xl px-6 pt-16 pb-12 text-center md:pt-24">
-        <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#00d4a4]/30 bg-[#00d4a4]/10 px-3.5 py-1 text-xs font-mono text-[#00d4a4] mb-8 shadow-[0_0_15px_rgba(0,212,164,0.1)]">
-          <span className="font-semibold uppercase tracking-wider text-[10px] bg-[#00d4a4] text-black px-1.5 py-0.5 rounded-sm">NEW</span>
-          <span className="text-zinc-300">|</span>
-          <span className="text-zinc-300">Trust layer for paid agent-to-agent transactions ✨</span>
-        </div>
-        <h2 className="mx-auto max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-0.04em] md:text-7xl">
-          The intelligent trust system platform
-        </h2>
-        <p className="mx-auto mt-6 max-w-2xl text-base md:text-lg text-zinc-400 leading-relaxed font-light">
-          Helping builder agents create secure, consistent payment checks before transactions.
-          Generate scorecards, previews, and registered report proofs on Base Sepolia.
-        </p>
-
-        {/* Email/Action Bar matching Image 1 */}
-        <div className="mx-auto mt-10 max-w-xl">
-          <div className="flex p-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-2xl focus-within:border-[#00d4a4]/40 transition">
-            <input 
-              type="text" 
-              placeholder="Enter seller agent address or ID..." 
-              value={selectedAgent.id}
-              readOnly
-              className="flex-1 bg-transparent px-5 py-3 text-sm text-zinc-300 placeholder-zinc-500 focus:outline-none font-mono"
-            />
-            <button 
-              onClick={runRiskCheck}
-              disabled={isPending}
-              className="rounded-full bg-white hover:bg-zinc-200 text-black px-6 py-3 text-sm font-semibold transition whitespace-nowrap shadow-md flex items-center gap-2"
-            >
-              {isPending ? "Analyzing..." : "Verify now"}
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
+      {/* Hero Section Container */}
+      <div className="flex-1 flex flex-col justify-between max-w-7xl mx-auto w-full px-6">
+        {/* Header */}
+        <header className="flex items-center justify-between py-5 w-full">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00d4a4] font-mono text-sm font-semibold text-black shadow-[0_0_15px_rgba(0,212,164,0.3)]">AB</div>
+            <span className="font-semibold tracking-tight text-lg text-white">AgentBond AI</span>
           </div>
-        </div>
-      </section>
+          
+          {/* Centered Navigation */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+            <a href="#" className="hover:text-white transition">Resources</a>
+            <a href="/demo" className="hover:text-white transition">Documentation</a>
+            <a href="#" className="hover:text-white transition">Customers</a>
+            <a href="#" className="hover:text-white transition">Blog</a>
+            <a href="#" className="hover:text-white transition">Pricing</a>
+          </nav>
 
-      {/* Main Panel Area matching Image 1 guide/api style */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="rounded-3xl border border-white/10 bg-[#061216]/80 backdrop-blur-lg shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden">
+          <div className="flex items-center gap-3">
+            <WalletConnectButton />
+          </div>
+        </header>
+
+        {/* Hero Content with reduced vertical padding to let panel peek out at the bottom */}
+        <section className="text-center py-6 md:py-10 my-auto">
+          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#00d4a4]/30 bg-[#00d4a4]/10 px-3.5 py-1 text-xs font-mono text-[#00d4a4] mb-5 shadow-[0_0_15px_rgba(0,212,164,0.1)]">
+            <span className="font-semibold uppercase tracking-wider text-[10px] bg-[#00d4a4] text-black px-1.5 py-0.5 rounded-sm">NEW</span>
+            <span className="text-zinc-300">|</span>
+            <span className="text-zinc-300">Trust layer for paid agent-to-agent transactions ✨</span>
+          </div>
+          <h2 className="mx-auto max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-0.04em] md:text-7xl">
+            The intelligent trust system platform
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-zinc-400 leading-relaxed font-light">
+            Helping builder agents create secure, consistent payment checks before transactions.
+            Generate scorecards, previews, and registered report proofs on Base Sepolia.
+          </p>
+
+          {/* Email/Action Bar */}
+          <div className="mx-auto mt-8 max-w-xl">
+            <div className="flex p-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-2xl focus-within:border-[#00d4a4]/40 transition">
+              <input 
+                type="text" 
+                placeholder="Enter seller agent address or ID..." 
+                value={selectedAgent.id}
+                readOnly
+                className="flex-1 bg-transparent px-5 py-3 text-sm text-zinc-300 placeholder-zinc-500 focus:outline-none font-mono"
+              />
+              <button 
+                onClick={runRiskCheck}
+                disabled={isPending}
+                className="rounded-full bg-white hover:bg-zinc-200 text-black px-6 py-3 text-sm font-semibold transition whitespace-nowrap shadow-md flex items-center gap-2"
+              >
+                {isPending ? "Analyzing..." : "Verify now"}
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* This spacing pushes the panel slightly into the viewport at the bottom of the landing page */}
+        <div className="h-8 md:h-12" />
+      </div>
+
+      {/* Main Panel Area: Positions the header to peek out on viewport entry */}
+      <section className="mx-auto max-w-7xl px-6 w-full mt-auto">
+        <div className="rounded-t-3xl border-t border-x border-white/10 bg-[#061216]/80 backdrop-blur-lg shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
           
           {/* Panel Header/Tabs */}
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-white/10 px-6 py-4 bg-[#08191e]/50 gap-4">
             <div className="flex items-center gap-6">
-              <span className="font-mono text-sm text-[#00d4a4] tracking-wider font-semibold">agentbond</span>
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-5 rounded-md bg-[#00d4a4] flex items-center justify-center font-mono text-[10px] font-bold text-black shadow-[0_0_10px_rgba(0,212,164,0.3)]">ab</div>
+                <span className="font-mono text-sm text-white tracking-wider font-semibold">agentbond</span>
+              </div>
               <div className="flex items-center gap-4 text-xs font-mono text-zinc-500">
                 <span className="text-[#00d4a4] border-b-2 border-[#00d4a4] pb-4 pt-1 font-semibold text-zinc-200 cursor-pointer">Guide</span>
                 <span className="pb-4 pt-1 hover:text-zinc-300 cursor-pointer">API Reference</span>
