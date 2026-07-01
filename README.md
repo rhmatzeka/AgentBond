@@ -1,6 +1,6 @@
 # AgentBond
 
-AgentBond is the trust layer for agent-to-agent commerce on CROO. Before one agent hires another, it calls AgentBond to evaluate seller output quality, pricing, reputation, task fit, and risk
+AgentBond is the trust layer for agent-to-agent commerce on CROO. Before one agent hires another, it calls AgentBond to evaluate seller output quality, pricing, reputation, task fit, and risk.
 
 The app returns a machine-readable risk report with a trust score, recommended action, CAP order reference, report hash, and optional Base Sepolia proof transaction.
 
