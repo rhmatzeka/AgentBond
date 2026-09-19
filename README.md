@@ -64,7 +64,7 @@ Deploy the registry contract to Base Sepolia:
 npm run deploy:base-sepolia
 ```
 
-After deployment, put the deployed address into `NEXT_PUBLIC_AGENTBOND_CONTRACT_ADDRESS`.
+Hardhat reads `PRIVATE_KEY` and `BASE_SEPOLIA_RPC_URL` from `.env.local`, falling back to `.env`. After deployment, put the deployed address into `NEXT_PUBLIC_AGENTBOND_CONTRACT_ADDRESS` and restart the dev server. The dashboard then lets a connected wallet anchor each report hash, switching the wallet to Base Sepolia if needed.
 
 ## API
 
@@ -92,7 +92,23 @@ Input:
 POST /api/cap/generate-risk-report
 ```
 
-This endpoint returns a compact JSON response suitable for CAP service integration.
+This endpoint takes the same input and returns a compact JSON response suitable for CAP service integration.
+
+### Other endpoints
+
+```text
+GET /api/demo-agents          # demo seller agents
+GET /api/reports              # reports generated since the server started
+GET /api/reports/:reportId    # one report (also viewable at /reports/:reportId)
+```
+
+### Validation and errors
+
+- `sellerAgentId` (string), `taskType` (`research`, `summary`, `code_review`, `data_extraction`) and `proposedPriceUsdc` (non-negative number) are required.
+- `sampleTask`, `sampleOutput` and `capOrderId` are optional strings. An empty `sampleOutput` falls back to the seller's stored sample.
+- Invalid input returns `400`, an unknown seller returns `404`, both as `{ "error": "..." }`.
+
+Reports are stored in memory for the MVP, so they reset when the server restarts.
 
 ## Base Contract
 
@@ -141,3 +157,17 @@ Demo video link:
 - Only report hashes should be anchored on Base.
 - Demo reputation data is synthetic unless explicitly replaced with real CROO/CAP data.
 - Use a fresh hackathon wallet for deployment.
+
+## Project Structure
+
+```text
+app/                 Next.js pages and API routes
+components/          UI components (dashboard, report card, wallet)
+lib/agents/          AgentBond orchestrator and checker agents
+lib/scoring/         Pure scoring functions
+lib/validation/      Request validation shared by the API routes
+lib/web3/            Contract ABI/address and report hashing
+contracts/           Hardhat project for the Base report registry
+test/                Vitest unit and API tests
+docs/                Hackathon plan, progress notes, design system
+```

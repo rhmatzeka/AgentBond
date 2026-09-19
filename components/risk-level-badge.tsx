@@ -1,11 +1,15 @@
 import type { RiskLevel } from "@/lib/types/report";
 
-export function RiskLevelBadge({ level }: { level: RiskLevel }) {
-  const styles = {
-    low: "bg-emerald-100 text-emerald-800 border-emerald-200",
-    medium: "bg-amber-100 text-amber-800 border-amber-200",
-    high: "bg-red-100 text-red-800 border-red-200",
-  }[level];
+const styles: Record<RiskLevel, string> = {
+  low: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+  medium: "border-amber-500/30 bg-amber-500/10 text-amber-400",
+  high: "border-red-500/30 bg-red-500/10 text-red-400",
+};
 
-  return <span className={`rounded-full border px-3 py-1 text-xs font-semibold capitalize ${styles}`}>{level} risk</span>;
+export function RiskLevelBadge({ level }: { level: RiskLevel }) {
+  return (
+    <span className={`rounded-full border px-2.5 py-0.5 font-mono text-xs uppercase ${styles[level]}`}>
+      {level} risk
+    </span>
+  );
 }

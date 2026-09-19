@@ -1,40 +1,72 @@
 "use client";
 
-import { useWriteContract } from "wagmi";
-import { agentBondReportRegistryAbi, reportRegistryAddress } from "@/lib/web3/contract";
+import { useAccount, useSwitchChain, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import type { RiskReport } from "@/lib/types/report";
+import {
+  agentBondReportRegistryAbi,
+  explorerTxUrl,
+  isRegistryConfigured,
+  registryChain,
+  reportRegistryAddress,
+} from "@/lib/web3/contract";
 
 export function ReportProofCard({ report }: { report: RiskReport }) {
-  const { writeContract, data: txHash, isPending, error } = useWriteContract();
-  const hasContract = reportRegistryAddress !== "0x0000000000000000000000000000000000000000";
+  const { isConnected, chainId } = useAccount();
+  const { switchChain, isPending: isSwitching } = useSwitchChain();
+  const { writeContract, data: txHash, isPending: isSigning, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: txHash });
+
+  const onWrongChain = isConnected && chainId !== registryChain.id;
+  const busy = isSwitching || isSigning || isConfirming;
+
+  function handleClick() {
+    if (onWrongChain) {
+      switchChain({ chainId: registryChain.id });
+      return;
+    }
+    writeContract({
+      address: reportRegistryAddress,
+      abi: agentBondReportRegistryAbi,
+      functionName: "registerReport",
+      args: [report.reportHash, report.sellerAgentId, BigInt(report.trustScore), report.riskLevel],
+      chainId: registryChain.id,
+    });
+  }
+
+  let label = "Anchor report hash on Base";
+  if (!isRegistryConfigured) label = "Set contract address to enable";
+  else if (!isConnected) label = "Connect wallet to register";
+  else if (isSwitching) label = "Switching network...";
+  else if (onWrongChain) label = `Switch to ${registryChain.name}`;
+  else if (isSigning) label = "Confirm in wallet...";
+  else if (isConfirming) label = "Confirming on Base...";
+  else if (isConfirmed) label = "Registered on Base";
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Proof layer</h3>
-        <span className="rounded-full bg-zinc-100 px-2 py-1 font-mono text-xs text-zinc-600">Base Sepolia</span>
-      </div>
-      <div className="space-y-3 font-mono text-xs text-zinc-600">
-        <p className="break-all">CAP order: {report.capOrderId}</p>
-        <p className="break-all">Report hash: {report.reportHash}</p>
-        <p className="break-all">Contract: {reportRegistryAddress}</p>
-        {txHash && <p className="break-all text-emerald-700">Tx hash: {txHash}</p>}
+    <div className="space-y-3 rounded-xl border border-white/5 bg-black/30 p-4">
+      <h5 className="font-mono text-[10px] uppercase tracking-wider text-brand-green">Proof of trust anchoring</h5>
+      <div className="space-y-1.5 break-all font-mono text-[10px] leading-normal text-zinc-400">
+        <p>CAP ID: {report.capOrderId}</p>
+        <p>Hash: {report.reportHash}</p>
+        <p>Registry: {reportRegistryAddress}</p>
+        {txHash && (
+          <p>
+            Registry tx:{" "}
+            <a className="text-emerald-400 underline" href={explorerTxUrl(txHash)} rel="noreferrer" target="_blank">
+              {txHash}
+            </a>
+          </p>
+        )}
       </div>
       <button
-        className="mt-5 rounded-full bg-black px-4 py-2 text-sm font-medium text-white disabled:bg-zinc-300"
-        disabled={!hasContract || isPending}
-        onClick={() =>
-          writeContract({
-            address: reportRegistryAddress,
-            abi: agentBondReportRegistryAbi,
-            functionName: "registerReport",
-            args: [report.reportHash, report.sellerAgentId, BigInt(report.trustScore), report.riskLevel],
-          })
-        }
+        className="w-full rounded-full border border-white/10 bg-white/5 py-2 font-mono text-[11px] text-white transition hover:border-white/20 disabled:opacity-40"
+        disabled={!isRegistryConfigured || !isConnected || busy || isConfirmed}
+        onClick={handleClick}
+        type="button"
       >
-        {hasContract ? (isPending ? "Registering" : "Register hash on Base") : "Add contract address to enable"}
+        {label}
       </button>
-      {error && <p className="mt-3 text-sm text-red-600">{error.message}</p>}
+      {error && <p className="font-mono text-[10px] text-red-500">{error.message.split("\n")[0]}</p>}
     </div>
   );
 }

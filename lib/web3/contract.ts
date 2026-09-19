@@ -1,3 +1,6 @@
+import { isAddress, zeroAddress } from "viem";
+import { baseSepolia } from "wagmi/chains";
+
 export const agentBondReportRegistryAbi = [
   {
     type: "function",
@@ -25,5 +28,15 @@ export const agentBondReportRegistryAbi = [
   },
 ] as const;
 
-export const reportRegistryAddress = (process.env.NEXT_PUBLIC_AGENTBOND_CONTRACT_ADDRESS ||
-  "0x0000000000000000000000000000000000000000") as `0x${string}`;
+const configuredAddress = process.env.NEXT_PUBLIC_AGENTBOND_CONTRACT_ADDRESS;
+
+export const reportRegistryAddress: `0x${string}` =
+  configuredAddress && isAddress(configuredAddress) ? configuredAddress : zeroAddress;
+
+export const isRegistryConfigured = reportRegistryAddress !== zeroAddress;
+
+export const registryChain = baseSepolia;
+
+export function explorerTxUrl(txHash: string) {
+  return `${registryChain.blockExplorers.default.url}/tx/${txHash}`;
+}

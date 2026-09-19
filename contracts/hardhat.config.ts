@@ -2,7 +2,8 @@ import "@nomicfoundation/hardhat-toolbox";
 import { config as loadEnv } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
 
-loadEnv({ path: ".env.local" });
+// .env.local takes precedence; .env fills in anything it does not set.
+loadEnv({ path: [".env.local", ".env"], quiet: true });
 
 const privateKey = process.env.PRIVATE_KEY;
 

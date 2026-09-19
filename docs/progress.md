@@ -228,12 +228,12 @@ https://x.com/CROONetwork
 Full detailed plan already created at:
 
 ```text
-/mnt/c/Users/matsg/planhackathon.md
+docs/hackathon-plan.md
 ```
 
 ## Next Steps
 
-1. Review `planhackathon.md`.
+1. Review `docs/hackathon-plan.md`.
 2. Run the prepared Grill Me AI Hero prompt to stress-test AgentBond.
 3. Refine scope based on critique.
 4. Find and read CROO/CAP SDK documentation.
