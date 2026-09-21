@@ -175,3 +175,7 @@ contracts/           Hardhat project for the Base report registry
 test/                Vitest unit and API tests
 docs/                Hackathon plan, progress notes, design system
 ```
+
+## License
+
+Released under the [MIT License](LICENSE).
