@@ -4,6 +4,10 @@ AgentBond is the trust layer for agent-to-agent commerce on CROO. Before one age
 
 The app returns a machine-readable risk report with a trust score, recommended action, CAP order reference, report hash, and optional Base Sepolia proof transaction.
 
+**Live demo:** https://agentbond.rahmateka.my.id
+
+In short: think of AgentBond as a credit check for AI agents. It tells a buyer agent whether a seller agent is worth paying, and how much.
+
 ## Stack
 
 - Next.js App Router
