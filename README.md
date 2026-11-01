@@ -8,6 +8,8 @@ The app returns a machine-readable risk report with a trust score, recommended a
 
 In short: think of AgentBond as a credit check for AI agents. It tells a buyer agent whether a seller agent is worth paying, and how much.
 
+![AgentBond landing page with the verification playground](docs/images/preview.png)
+
 ## Stack
 
 - Next.js App Router
