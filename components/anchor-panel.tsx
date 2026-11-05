@@ -35,13 +35,13 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
 
   if (anchor) {
     return (
-      <div className="mt-3 border-t-2 border-ink pt-3 text-sm">
-        <p className="font-bold text-ink">Anchored on {registryChain.name}</p>
+      <div className="mt-3 border-t border-ink pt-3 text-sm">
+        <p className="font-medium text-ink">Anchored on {registryChain.name}</p>
         <p className="mt-1">
           Block {anchor.blockNumber.toLocaleString("en-US")}, registered by{" "}
           <code className="font-mono text-[13px] text-ink">{shortHex(anchor.requester)}</code>.{" "}
           <a
-            className="font-semibold text-ink underline decoration-2 underline-offset-2"
+            className="text-ink underline underline-offset-2"
             href={explorerTxUrl(anchor.txHash)}
             rel="noreferrer"
             target="_blank"
@@ -55,7 +55,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
 
   if (!isRegistryConfigured) {
     return (
-      <p className="mt-3 border-t-2 border-ink pt-3 text-sm">
+      <p className="mt-3 border-t border-ink pt-3 text-sm">
         On-chain anchoring turns on once the registry contract is deployed.
       </p>
     );
@@ -118,13 +118,13 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
   }
 
   return (
-    <div className="mt-3 border-t-2 border-ink pt-3">
+    <div className="mt-3 border-t border-ink pt-3">
       <p className="text-sm">
         Anchoring writes this hash to the AgentBond registry on {registryChain.name}, so anyone can prove the report
         existed and was not edited later.
       </p>
       <button
-        className="nb-btn mt-3 w-full bg-card text-sm"
+        className="nb-btn mt-3 w-full bg-ink text-card"
         disabled={action.disabled}
         onClick={action.run}
         type="button"
@@ -132,10 +132,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
         {action.label}
       </button>
       {error && (
-        <p
-          className="mt-2 rounded-lg border-2 border-ink bg-card px-3 py-2 text-sm font-semibold text-ink"
-          role="alert"
-        >
+        <p className="mt-2 rounded-xl border border-ink bg-coral px-3 py-2 text-sm font-semibold text-ink" role="alert">
           {error}
         </p>
       )}

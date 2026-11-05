@@ -1,36 +1,34 @@
 import { checkerLabel } from "@/lib/format";
 
 const order = ["OutputQualityChecker", "ReputationChecker", "PricingBenchmarkChecker", "TaskFitChecker"];
-const fills = ["bg-lilac", "hatch bg-mint", "dots bg-butter", "bg-coral"];
+const tones = ["bg-lilac", "bg-mint", "bg-sun", "bg-coral"];
 
 /** The four checks drawn to scale by their share of the trust score, then one card each. */
 export function ScoreWeights() {
   return (
     <div className="space-y-6">
-      <div aria-hidden className="flex h-16 overflow-hidden rounded-[14px] border-[3px] border-ink bg-card shadow-hard">
+      <div aria-hidden className="flex h-14 overflow-hidden rounded-full border border-ink bg-card">
         {order.map((key, index) => (
           <div
-            className={`${fills[index]} flex items-end border-ink p-2 [&:not(:last-child)]:border-r-[3px]`}
+            className={`${tones[index]} flex items-center border-ink px-4 text-[15px] font-medium [&:not(:last-child)]:border-r`}
             key={key}
             style={{ width: `${checkerLabel[key].weight}%` }}
           >
-            <span className="rounded-md border-2 border-ink bg-card px-1.5 font-mono text-xs font-semibold">
-              {checkerLabel[key].weight}%
-            </span>
+            {checkerLabel[key].weight}%
           </div>
         ))}
       </div>
-      <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {order.map((key, index) => (
-          <div className="nb-card overflow-hidden" key={key}>
-            <div aria-hidden className={`h-12 border-b-[3px] border-ink ${fills[index]}`} />
-            <div className="p-5">
-              <dt>
-                <span className="display block text-4xl tabular-nums">{checkerLabel[key].weight}%</span>
-                <span className="mt-2 block text-lg font-extrabold">{checkerLabel[key].name}</span>
-              </dt>
-              <dd className="mt-1 text-sm leading-relaxed text-graphite">{checkerLabel[key].asks}</dd>
-            </div>
+          <div className="nb-card p-7" key={key}>
+            <dt>
+              <span className="flex items-center justify-between">
+                <span className="display text-5xl tabular-nums">{checkerLabel[key].weight}%</span>
+                <span aria-hidden className={`h-7 w-7 rounded-full border border-ink ${tones[index]}`} />
+              </span>
+              <span className="mt-5 block text-xl font-medium">{checkerLabel[key].name}</span>
+            </dt>
+            <dd className="mt-1.5 leading-relaxed text-graphite">{checkerLabel[key].asks}</dd>
           </div>
         ))}
       </dl>

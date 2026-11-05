@@ -73,16 +73,16 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
-      <form className="nb-card space-y-7 p-5 sm:p-7" onSubmit={runCheck}>
+      <form className="nb-card space-y-7 p-6 sm:p-8" onSubmit={runCheck}>
         <fieldset>
-          <legend className="display text-xl">Who is selling?</legend>
+          <legend className="display text-2xl">Who is selling?</legend>
           <p className="mt-1 text-sm text-graphite">Four demo sellers with very different track records.</p>
           <div className="mt-4 grid gap-3">
             {sellers.map((item) => {
               const total = item.completedJobs + item.failedJobs;
               return (
                 <label
-                  className="group flex cursor-pointer items-start gap-3.5 rounded-[10px] border-2 border-ink bg-card px-4 py-3.5 transition-[background-color,box-shadow,transform] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-hard-sm has-[:checked]:translate-x-0 has-[:checked]:translate-y-0 has-[:checked]:bg-lilac has-[:checked]:shadow-none"
+                  className="group flex cursor-pointer items-start gap-3.5 rounded-2xl border border-ink bg-card px-4 py-3.5 transition-[background-color,box-shadow,transform] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-sm has-[:checked]:bg-lilac"
                   key={item.id}
                 >
                   <input
@@ -95,19 +95,17 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
                   />
                   <span
                     aria-hidden
-                    className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 border-current peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
+                    className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full border border-current peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
                   >
                     <span className="hidden h-2 w-2 rounded-full bg-current group-has-[:checked]:block" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="font-bold">{item.name}</span>
-                      <span className="whitespace-nowrap font-mono text-sm tabular-nums">
-                        {formatUsdc(item.defaultPriceUsdc)}
-                      </span>
+                      <span className="text-[17px] font-medium">{item.name}</span>
+                      <span className="whitespace-nowrap tabular-nums">{formatUsdc(item.defaultPriceUsdc)}</span>
                     </span>
                     <span className="mt-0.5 block text-sm opacity-75">{item.description}</span>
-                    <span className="mt-1 block font-mono text-xs tabular-nums opacity-60">
+                    <span className="mt-1 block text-[13px] tabular-nums opacity-60">
                       {item.completedJobs}/{total} jobs done, {item.uniqueBuyers}{" "}
                       {item.uniqueBuyers === 1 ? "buyer" : "buyers"}, rated {item.averageRating}/5
                     </span>
@@ -120,7 +118,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <label className="grid gap-1.5">
-            <span className="text-sm font-bold">Task type</span>
+            <span className="text-[15px] font-medium">Task type</span>
             <select
               className="nb-field"
               onChange={(event) => setTaskType(event.target.value as TaskType)}
@@ -135,7 +133,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
             </select>
           </label>
           <label className="grid gap-1.5">
-            <span className="text-sm font-bold">Quoted price in USDC</span>
+            <span className="text-[15px] font-medium">Quoted price in USDC</span>
             <input
               className="nb-field font-mono tabular-nums"
               inputMode="decimal"
@@ -149,12 +147,12 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
         </div>
 
         <label className="grid gap-1.5">
-          <span className="text-sm font-bold">What your agent asked for</span>
+          <span className="text-[15px] font-medium">What your agent asked for</span>
           <input className="nb-field" maxLength={500} onChange={(event) => setTask(event.target.value)} value={task} />
         </label>
 
         <label className="grid gap-1.5">
-          <span className="text-sm font-bold">Sample of the seller&apos;s work</span>
+          <span className="text-[15px] font-medium">Sample of the seller&apos;s work</span>
           <textarea
             className="nb-field min-h-28 leading-relaxed"
             maxLength={10_000}
@@ -168,11 +166,11 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
         </label>
 
         <div className="flex flex-wrap items-center gap-4">
-          <button className="nb-btn w-full bg-lilac px-6 py-3.5 sm:w-auto" disabled={isPending} type="submit">
+          <button className="nb-btn w-full bg-ink text-card sm:w-auto" disabled={isPending} type="submit">
             {isPending ? "Checking the seller…" : "Run credit check"}
           </button>
           {error && (
-            <p className="rounded-lg border-2 border-ink bg-paper px-3 py-2 text-sm font-semibold" role="alert">
+            <p className="rounded-xl border border-ink bg-coral px-3 py-2 text-sm" role="alert">
               {error}
             </p>
           )}
@@ -186,24 +184,24 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
               <AnchorPanel key={report.reportId} onAnchored={setReport} report={report} />
             </ReportSlip>
             <Link
-              className="block text-right text-sm font-bold underline decoration-2 underline-offset-4 hover:no-underline"
+              className="block text-right underline underline-offset-4 hover:no-underline"
               href={`/reports/${report.reportId}`}
             >
               Open the shareable report
             </Link>
           </div>
         ) : (
-          <div className="rounded-[14px] border-[3px] border-dashed border-ink bg-card/60 p-6 sm:p-7">
+          <div className="rounded-3xl border border-dashed border-ink bg-card/50 p-6 sm:p-8">
             <div aria-hidden className={`space-y-5 ${isPending ? "animate-pulse" : ""}`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2">
                   <div className="h-6 w-44 rounded-md bg-mist" />
                   <div className="h-3.5 w-24 rounded bg-mist" />
                 </div>
-                <div className="h-9 w-20 rounded-[10px] border-[3px] border-dashed border-ash" />
+                <div className="h-9 w-24 rounded-full border border-dashed border-ash" />
               </div>
-              <div className="display text-[5.75rem] leading-[0.8] text-mist">00</div>
-              <div className="h-6 rounded-full border-2 border-dashed border-ash" />
+              <div className="display text-[6rem] leading-[0.78] text-mist">00</div>
+              <div className="h-4 rounded-full border border-dashed border-ash" />
               {[0, 1, 2, 3].map((row) => (
                 <div className="space-y-2" key={row}>
                   <div className="h-3.5 w-28 rounded bg-mist" />
@@ -211,7 +209,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
                 </div>
               ))}
             </div>
-            <p className="mt-7 font-extrabold">{isPending ? "Grading the sample…" : "No report yet"}</p>
+            <p className="mt-7 text-lg font-medium">{isPending ? "Grading the sample…" : "No report yet"}</p>
             <p className="mt-1 text-sm text-graphite">
               {isPending
                 ? "Quality, price, reputation and task fit are being scored."

@@ -1,88 +1,78 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f0f0eb;
+  --color-paper: #f4f4f0;
   --color-card: #ffffff;
   --color-ink: #000000;
-  --color-graphite: #47473f;
-  --color-ash: #8a8a82;
-  --color-mist: #dcdcd5;
-  --color-lilac: #b9b3ff;
-  --color-mint: #a6e8c2;
-  --color-butter: #ffe07d;
-  --color-coral: #ff9f87;
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --color-graphite: #4b4b47;
+  --color-ash: #8a8a84;
+  --color-mist: #e4e4de;
+  --color-lilac: #b49cff;
+  --color-mint: #7fdbb0;
+  --color-sun: #ffd23f;
+  --color-coral: #ff8a6b;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
-  --radius-nb: 14px;
-  --radius-nb-sm: 10px;
   --shadow-hard-sm: 4px 4px 0 0 #000;
   --shadow-hard: 6px 6px 0 0 #000;
-  --shadow-hard-lg: 10px 10px 0 0 #000;
+  --shadow-hard-lg: 8px 8px 0 0 #000;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Faint ledger grid: the page reads like a sheet the report is filed on. */
 body {
-  background-color: var(--color-paper);
-  background-image:
-    linear-gradient(to right, rgb(0 0 0 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(0 0 0 / 0.045) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
 ::selection {
-  background: #000;
-  color: #fff;
+  background: var(--color-lilac);
+  color: #000;
 }
 
 :focus-visible {
-  outline: 3px solid #000;
+  outline: 2px solid #000;
   outline-offset: 3px;
 }
 
-/* Wide, heavy display type. Archivo is variable on width, so headings stretch instead of squeezing. */
+/* Big, light headings: size does the work, not weight. */
 @utility display {
-  font-weight: 800;
-  font-stretch: 125%;
-  letter-spacing: -0.025em;
-  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
 }
 
-/* A card with a black frame and a hard, unblurred shadow. */
+/* White card with a thin black line and generous corners. */
 @utility nb-card {
   background: var(--color-card);
-  border: 3px solid #000;
-  border-radius: var(--radius-nb);
-  box-shadow: var(--shadow-hard);
+  border: 1px solid #000;
+  border-radius: 1.5rem;
 }
 
-/* Buttons lift on hover and sink into their shadow when pressed. */
+/* Square button that lifts off its hard shadow on hover. */
 @utility nb-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border: 3px solid #000;
-  border-radius: var(--radius-nb-sm);
-  padding: 0.7rem 1.3rem;
-  font-weight: 700;
-  box-shadow: var(--shadow-hard-sm);
+  border: 1px solid #000;
+  padding: 0.85rem 1.5rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
   transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    background-color 120ms ease;
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
   &:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 0 #000;
+    transform: translate(-4px, -4px);
+    box-shadow: var(--shadow-hard-sm);
   }
   &:active {
-    transform: translate(4px, 4px);
-    box-shadow: 0 0 0 0 #000;
+    transform: none;
+    box-shadow: none;
   }
   &:disabled {
     pointer-events: none;
@@ -92,13 +82,12 @@ body {
 
 @utility nb-field {
   width: 100%;
-  border: 2px solid #000;
-  border-radius: var(--radius-nb-sm);
+  border: 1px solid #000;
   background: #fff;
-  padding: 0.7rem 0.9rem;
-  font-size: 15px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
   color: #000;
-  transition: box-shadow 120ms ease;
+  transition: box-shadow 140ms ease;
   &::placeholder {
     color: var(--color-ash);
   }
@@ -108,45 +97,29 @@ body {
   }
 }
 
-/* Monochrome stand-in for "caution": diagonal hatching. */
-@utility hatch {
-  background-image: repeating-linear-gradient(-45deg, #000 0 2px, transparent 2px 7px);
-}
-
-/* Monochrome stand-in for "weak": a sparse dot grid. */
-@utility dots {
-  background-image: radial-gradient(#000 1.2px, transparent 1.4px);
-  background-size: 6px 6px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .verdict-land {
-    animation: verdict-land 420ms cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+    animation: verdict-land 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
   }
-  .ticker-track {
-    animation: ticker 40s linear infinite;
-  }
-  .ticker:hover .ticker-track {
-    animation-play-state: paused;
+  .coin-float {
+    animation: coin-float 7s ease-in-out infinite alternate;
   }
 }
 
 @keyframes verdict-land {
   from {
     opacity: 0;
-    transform: translate(-8px, -8px) rotate(-4deg);
-    box-shadow: 10px 10px 0 0 #000;
+    transform: scale(1.4) rotate(-6deg);
   }
   to {
     opacity: 1;
     transform: none;
-    box-shadow: 4px 4px 0 0 #000;
   }
 }
 
-@keyframes ticker {
+@keyframes coin-float {
   to {
-    transform: translateX(-50%);
+    translate: 0 -14px;
   }
 }
 

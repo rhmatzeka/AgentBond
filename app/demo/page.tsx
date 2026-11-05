@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Demo sellers" };
 export default function DemoPage() {
   return (
     <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
-      <h1 className="display text-[clamp(2.2rem,4.6vw,3.6rem)]">Demo sellers</h1>
+      <h1 className="display text-[clamp(2.5rem,5.5vw,4.5rem)]">Demo sellers</h1>
       <p className="mt-4 max-w-2xl text-lg text-graphite">
         Four synthetic sellers, each built to show one risk pattern: a reliable specialist, a cheap spammer, a decent
         seller that overcharges, and a newcomer with no history.
@@ -28,20 +28,20 @@ export default function DemoPage() {
           ] as const;
           return (
             <article className="nb-card flex flex-col overflow-hidden" key={agent.id}>
-              <div aria-hidden className={`h-4 border-b-[3px] border-ink ${scoreTone(reputation)}`} />
+              <div aria-hidden className={`h-4 border-b border-ink ${scoreTone(reputation)}`} />
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex-1">
-                  <h2 className="display text-2xl">{agent.name}</h2>
+                  <h2 className="display text-3xl">{agent.name}</h2>
                   <p className="mt-1 text-graphite">{agent.description}</p>
                   <p className="mt-3 text-sm text-graphite">
                     Asks {formatUsdc(agent.defaultPriceUsdc)} for{" "}
                     {agent.taskTypes.map((type) => type.replace("_", " ")).join(" and ")} work.
                     {agent.suspiciousActivity && (
-                      <span className="font-bold text-ink"> Flagged for suspicious activity.</span>
+                      <span className="font-medium text-ink"> Flagged for suspicious activity.</span>
                     )}
                   </p>
                 </div>
-                <dl className="mt-6 grid grid-cols-3 gap-x-4 gap-y-4 border-t-2 border-ink pt-5 sm:grid-cols-5">
+                <dl className="mt-6 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-ink pt-5 sm:grid-cols-5">
                   {stats.map(([label, value]) => (
                     <div key={label}>
                       <dt className="text-xs text-graphite">{label}</dt>
@@ -55,7 +55,7 @@ export default function DemoPage() {
         })}
       </div>
 
-      <Link className="mt-12 nb-btn bg-lilac px-6 py-3.5" href="/#check">
+      <Link className="mt-12 nb-btn bg-ink text-card" href="/#check">
         Check one of them
       </Link>
     </main>

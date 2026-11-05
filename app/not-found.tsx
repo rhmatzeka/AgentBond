@@ -7,7 +7,7 @@ export default function NotFound() {
       <p className="mt-3 text-graphite">
         This page or report does not exist. Report links only work for checks saved by this server.
       </p>
-      <Link className="mt-8 nb-btn bg-lilac" href="/#check">
+      <Link className="mt-8 nb-btn bg-ink text-card" href="/#check">
         Run a new check
       </Link>
     </main>

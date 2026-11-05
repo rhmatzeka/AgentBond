@@ -24,73 +24,74 @@ export function ReportSlip({
   );
 
   return (
-    <article aria-label={`${heading} for ${report.sellerAgentName}`} className="nb-card overflow-hidden">
-      <header className="flex items-center justify-between gap-4 border-b-[3px] border-ink bg-ink px-5 py-3 text-card sm:px-6">
-        <p className="text-sm font-bold">{heading}</p>
-        <p className="rounded-full border-2 border-card bg-lilac px-2.5 py-0.5 text-xs font-bold text-ink">
-          {report.taskType.replace("_", " ")}
-        </p>
+    <article
+      aria-label={`${heading} for ${report.sellerAgentName}`}
+      className="overflow-hidden rounded-3xl border border-ink bg-card"
+    >
+      <header className="flex items-center justify-between gap-4 border-b border-ink px-6 py-3.5">
+        <p className="text-[15px] font-medium">{heading}</p>
+        <p className="rounded-full border border-ink px-3 py-0.5 text-[13px]">{report.taskType.replace("_", " ")}</p>
       </header>
 
-      <div className="px-5 pb-6 pt-5 sm:px-6">
+      <div className="px-6 pb-7 pt-6">
         <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
           <div className="min-w-0">
-            <h3 className="display break-words text-[1.4rem] leading-tight sm:text-2xl">{report.sellerAgentName}</h3>
-            <p className="mt-0.5 text-sm text-graphite">Quoted {formatUsdc(report.proposedPriceUsdc)}</p>
+            <h3 className="display break-words text-[1.7rem]">{report.sellerAgentName}</h3>
+            <p className="mt-1 text-[15px] text-graphite">Quoted {formatUsdc(report.proposedPriceUsdc)}</p>
           </div>
           <VerdictBadge action={report.recommendedAction} animate={animateVerdict} />
         </div>
 
         <div className="mt-6 flex items-end gap-4">
-          <p className="display text-[5.75rem] leading-[0.8] tabular-nums">{report.trustScore}</p>
-          <p className="pb-1 text-sm leading-snug text-graphite">
-            trust score out of 100
+          <p className="display text-[6rem] leading-[0.78] tabular-nums tracking-[-0.05em]">{report.trustScore}</p>
+          <p className="pb-1 text-[15px] leading-snug text-graphite">
+            trust score
             <br />
-            <span className="font-semibold text-ink">{riskLabel[report.riskLevel]}</span>
+            <span className="text-ink">{riskLabel[report.riskLevel]}</span>
           </p>
         </div>
-        <div className="mt-4">
+        <div className="mt-5">
           <ScoreBar score={report.trustScore} size="lg" />
         </div>
 
-        <div className={`mt-6 rounded-[10px] border-2 border-ink px-4 py-3 ${verdictTone[report.recommendedAction]}`}>
+        <div className={`mt-6 rounded-2xl border border-ink px-5 py-4 ${verdictTone[report.recommendedAction]}`}>
           {report.recommendedAction === "avoid" ? (
             <>
-              <p className="font-bold">Do not pay up front</p>
-              <p className="mt-0.5 text-sm">
+              <p className="text-lg font-medium">Do not pay up front</p>
+              <p className="mt-0.5 text-[15px]">
                 {report.paymentRecommendation} If you go ahead anyway, cap it at{" "}
                 {formatUsdc(report.recommendedMaxPriceUsdc)}.
               </p>
             </>
           ) : (
             <>
-              <p className="font-bold">Pay at most {formatUsdc(report.recommendedMaxPriceUsdc)}</p>
-              <p className="mt-0.5 text-sm">{report.paymentRecommendation}</p>
+              <p className="text-lg font-medium">Pay at most {formatUsdc(report.recommendedMaxPriceUsdc)}</p>
+              <p className="mt-0.5 text-[15px]">{report.paymentRecommendation}</p>
             </>
           )}
         </div>
 
-        <dl className="mt-6 space-y-4">
+        <dl className="mt-7 space-y-5">
           {checks.map((result) => {
             const label = checkerLabel[result.checkerName];
             return (
               <div key={result.checkerName}>
                 <div className="flex items-baseline justify-between gap-3">
-                  <dt className="font-bold">
+                  <dt className="font-medium">
                     {label?.name ?? result.checkerName}
-                    {label && <span className="ml-2 font-mono text-xs font-normal text-ash">{label.weight}%</span>}
+                    {label && <span className="ml-2 text-sm text-ash">{label.weight}%</span>}
                   </dt>
-                  <dd className="font-mono font-semibold tabular-nums">{result.score}</dd>
+                  <dd className="font-medium tabular-nums">{result.score}</dd>
                 </div>
-                <dd className="mt-1.5">
+                <dd className="mt-2">
                   <ScoreBar score={result.score} />
                 </dd>
-                {!compact && <dd className="mt-1.5 text-sm text-graphite">{result.notes[0]}</dd>}
+                {!compact && <dd className="mt-2 text-[15px] text-graphite">{result.notes[0]}</dd>}
                 {!compact && result.riskFlags.length > 0 && (
                   <dd>
-                    <ul className="mt-2 flex flex-wrap gap-1.5">
+                    <ul className="mt-2.5 flex flex-wrap gap-1.5">
                       {result.riskFlags.map((flag) => (
-                        <li className="rounded-full border-2 border-ink px-2 py-0.5 text-xs font-semibold" key={flag}>
+                        <li className="rounded-full border border-ink px-2.5 py-0.5 text-[13px]" key={flag}>
                           {flag.replaceAll("_", " ")}
                         </li>
                       ))}
@@ -104,8 +105,8 @@ export function ReportSlip({
       </div>
 
       {!compact && (
-        <footer className="space-y-1.5 border-t-[3px] border-ink bg-paper px-5 py-4 text-sm text-graphite sm:px-6">
-          <p className="flex flex-wrap items-center gap-x-2">
+        <footer className="space-y-2 border-t border-ink bg-paper px-6 py-5 text-[15px] text-graphite">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
             Report hash
             <code className="font-mono text-[13px] text-ink" title={report.reportHash}>
               {shortHex(report.reportHash, 10, 8)}

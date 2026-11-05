@@ -11,16 +11,16 @@ export default async function ReportsPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
-      <h1 className="display text-[clamp(2.2rem,4.6vw,3.6rem)]">Reports</h1>
+      <h1 className="display text-[clamp(2.5rem,5.5vw,4.5rem)]">Reports</h1>
       <p className="mt-4 max-w-2xl text-lg text-graphite">The 50 most recent credit checks, newest first.</p>
       <div className="mt-10">
         {reports.length > 0 ? (
           <ReportsTable reports={reports} />
         ) : (
-          <div className="rounded-[14px] border-[3px] border-dashed border-ink bg-card px-8 py-14 text-center">
-            <p className="font-semibold">No checks yet</p>
+          <div className="rounded-3xl border border-dashed border-ink bg-card px-8 py-14 text-center">
+            <p className="font-medium">No checks yet</p>
             <p className="mt-1 text-sm text-graphite">Run the first one and it shows up here.</p>
-            <Link className="mt-5 nb-btn bg-lilac" href="/#check">
+            <Link className="mt-5 nb-btn bg-ink text-card" href="/#check">
               Check a seller
             </Link>
           </div>
