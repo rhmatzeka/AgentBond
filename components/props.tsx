@@ -33,43 +33,38 @@ export function PriceTag({ text, className = "" }: { text: string; className?: s
   );
 }
 
-const bars = [38, 52, 30, 64, 46, 58, 72, 40, 66, 54];
-const line = [62, 48, 52, 36, 44, 30, 22, 34, 18, 26];
-
-/** White mockup card: market range for a task with a little chart. */
-export function PriceChart() {
+/** White mockup card: the real market range per task type, drawn on a 0 to 5 USDC axis. */
+export function BenchmarkChart({ ranges }: { ranges: { label: string; min: number; max: number }[] }) {
+  const axis = 5;
   return (
-    <div className="light w-[19rem] rounded-2xl border border-black bg-white text-black shadow-[6px_6px_0_0_#000]">
-      <div className="grid grid-cols-2 border-b border-black">
-        <div className="border-r border-black p-4">
-          <p className="text-3xl">2 USDC</p>
-          <p className="mt-1 flex items-center gap-1.5 text-[13px]">
-            <span className="h-2.5 w-2.5 rounded-full bg-black" />
-            Floor
-          </p>
-        </div>
-        <div className="p-4">
-          <p className="text-3xl">3 USDC</p>
-          <p className="mt-1 flex items-center gap-1.5 text-[13px]">
-            <span className="h-2.5 w-2.5 rounded-full bg-pink" />
-            Ceiling
-          </p>
-        </div>
-      </div>
-      <svg aria-hidden className="block w-full p-4" viewBox="0 0 220 90">
-        {bars.map((height, index) => (
-          <rect fill="#d9d9d4" height={height} key={index} width="12" x={8 + index * 21} y={90 - height} />
+    <div className="light w-full max-w-[22rem] rounded-2xl border border-black bg-white text-black shadow-[6px_6px_0_0_#000]">
+      <p className="border-b border-black px-5 py-3 text-[15px]">Market range per task, in USDC</p>
+      <ul className="space-y-3.5 px-5 py-5">
+        {ranges.map((range) => (
+          <li key={range.label}>
+            <p className="flex justify-between text-[14px]">
+              <span>{range.label}</span>
+              <span className="tabular-nums">
+                {range.min} to {range.max}
+              </span>
+            </p>
+            <div className="relative mt-1.5 h-3 rounded-full bg-[#e8e8e3]">
+              <div
+                className="absolute inset-y-0 rounded-full border border-black bg-pink"
+                style={{ left: `${(range.min / axis) * 100}%`, right: `${100 - (range.max / axis) * 100}%` }}
+              />
+            </div>
+          </li>
         ))}
-        <polyline
-          fill="none"
-          points={line.map((y, index) => `${14 + index * 21},${y}`).join(" ")}
-          stroke="var(--color-pink)"
-          strokeWidth="3"
-        />
-        {line.map((y, index) => (
-          <circle cx={14 + index * 21} cy={y} fill="var(--color-pink)" key={index} r="4" />
-        ))}
-      </svg>
+      </ul>
+      <p className="flex justify-between border-t border-black px-5 py-2 text-[12px] tabular-nums text-[#4b4b47]">
+        <span>0</span>
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+        <span>5</span>
+      </p>
     </div>
   );
 }
@@ -129,7 +124,7 @@ const iconPaths: Record<IconKind, React.ReactNode> = {
   magnifier: (
     <>
       <circle cx="17" cy="17" fill="var(--color-sky)" r="10" {...S} />
-      <path d="M25 25l9 9" {...S} strokeWidth="5" />
+      <path d="M25 25l9 9" stroke="var(--color-sky)" strokeLinecap="round" strokeWidth="6" />
     </>
   ),
   warning: (

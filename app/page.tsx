@@ -2,15 +2,15 @@ import Link from "next/link";
 import { CheckForm } from "@/components/check-form";
 import { Coin } from "@/components/coin";
 import { CheckedFirst, PayingBlind, StreetScene, WavingRobot } from "@/components/illustrations";
-import { FlatIcon, type IconKind, PriceChart, PriceTag, RobotAvatar, RoundSticker, Tile } from "@/components/props";
+import { BenchmarkChart, FlatIcon, type IconKind, PriceTag, RobotAvatar, RoundSticker, Tile } from "@/components/props";
 import { ReportLookup } from "@/components/report-lookup";
 import { ReportSlip } from "@/components/report-slip";
 import { ScoreWeights } from "@/components/score-weights";
-import { VerdictBadge } from "@/components/verdict-badge";
 import { demoAgents } from "@/lib/data/demo-agents";
 import { exampleReport } from "@/lib/data/example-report";
+import { pricingBenchmarks } from "@/lib/data/pricing-benchmarks";
 import { loadRecentReports, loadReportCount } from "@/lib/data/recent-reports";
-import { verdictLabel } from "@/lib/format";
+import { shortHex, verdictLabel } from "@/lib/format";
 
 export const revalidate = 30;
 
@@ -26,10 +26,12 @@ const requestExample = `curl -X POST https://agentbond.rahmateka.my.id/api/cap/g
 
 const responseExample = `{
   "reportId": "report_3f9c1a…",
-  "trustScore": 28,
+  "sellerAgentId": "cheap-spam-bot",
+  "trustScore": 29,
+  "riskLevel": "high",
   "recommendedAction": "avoid",
   "recommendedMaxPriceUsdc": 2,
-  "reasons": ["The sample brushes off sources, …"],
+  "reasons": ["The response provides no sources…", "…"],
   "reportHash": "0x8c2e…"
 }`;
 
@@ -44,43 +46,71 @@ const heroCoins = [
 ];
 
 const verdictBullets = [
-  { action: "hire" as const, text: "Hire when the score is 70 or more, and pay up to the market ceiling." },
-  { action: "verify" as const, text: "Verify first between 40 and 69: pay per milestone or check the delivery." },
-  { action: "avoid" as const, text: "Avoid below 40, or check the work by hand before any payment." },
+  "Hire at 70 or more: pay up to the top of the market range.",
+  "Verify first at 40 to 69: pay per milestone, capped at the middle of the range.",
+  "Avoid at 39 or less: do not pay up front, and never more than the bottom of the range.",
+];
+
+const taskNames = {
+  research: "Research",
+  summary: "Summary",
+  code_review: "Code review",
+  data_extraction: "Data extraction",
+};
+const benchmarkRanges = Object.entries(pricingBenchmarks).map(([task, range]) => ({
+  label: taskNames[task as keyof typeof taskNames],
+  ...range,
+}));
+
+const integrations = [
+  { kind: "code" as const, fill: "var(--color-teal)", label: "REST API" },
+  { kind: "bot" as const, fill: "var(--color-yellow)", label: "CAP service" },
+  { kind: "chain" as const, fill: "var(--color-coral)", label: "Base Sepolia" },
+  { kind: "wallet" as const, fill: "var(--color-sky)", label: "Any wallet" },
 ];
 
 const loopLabels = [
-  { text: "Grade the work", className: "left-[4%] top-4" },
-  { text: "Compare the price", className: "left-1/2 top-4 -translate-x-1/2" },
-  { text: "Read the track record", className: "right-[4%] top-4" },
-  { text: "Anchor on Base", className: "bottom-4 left-[4%]" },
-  { text: "Pay with confidence", className: "bottom-4 left-1/2 -translate-x-1/2" },
-  { text: "Check the next one", className: "bottom-4 right-[4%]" },
+  { text: "Grade the output, 40%", className: "left-[4%] top-4" },
+  { text: "Read the track record, 30%", className: "left-1/2 top-4 -translate-x-1/2" },
+  { text: "Compare the price, 20%", className: "right-[4%] top-4" },
+  { text: "Check the task fit, 10%", className: "bottom-4 left-[4%]" },
+  { text: "Get a verdict", className: "bottom-4 left-1/2 -translate-x-1/2" },
+  { text: "Anchor it on Base", className: "bottom-4 right-[4%]" },
 ];
 
-const flagRows: [IconKind, string][][] = [
-  [
-    ["magnifier", "dismisses evidence"],
-    ["warning", "no delivery"],
-    ["doc", "too short"],
-    ["spark", "missing sources"],
-    ["coin", "price outside benchmark"],
-  ],
-  [
-    ["people", "low buyer diversity"],
-    ["shield", "suspicious activity"],
-    ["clock", "high failure rate"],
-    ["magnifier", "irrelevant"],
-    ["doc", "generic"],
-  ],
-  [
-    ["warning", "task mismatch"],
-    ["spark", "low output quality"],
-    ["coin", "overpriced"],
-    ["clock", "incomplete"],
-    ["shield", "unverified claims"],
-  ],
+/** Flags every checker can raise, used when there are too few real reports to count. */
+const ruleFlags = [
+  "dismisses_evidence",
+  "no_delivery",
+  "too_short",
+  "low_output_quality",
+  "price_outside_benchmark",
+  "low_buyer_diversity",
+  "suspicious_activity",
+  "high_failure_rate",
+  "task_mismatch",
 ];
+
+function flagIcon(flag: string): IconKind {
+  if (/price|cost|pay/.test(flag)) return "coin";
+  if (/buyer|diversity/.test(flag)) return "people";
+  if (/suspicious|unverified|claim/.test(flag)) return "shield";
+  if (/failure|incomplete|late/.test(flag)) return "clock";
+  if (/task|irrelevant|mismatch|delivery/.test(flag)) return "warning";
+  if (/source|evidence|link|citation/.test(flag)) return "magnifier";
+  if (/short|generic|detail/.test(flag)) return "doc";
+  return "spark";
+}
+
+/** Most common flags across recent reports, with how often each came up. */
+function countFlags(reports: { checkerResults: { riskFlags: string[] }[] }[]) {
+  const counts = new Map<string, number>();
+  for (const report of reports)
+    for (const result of report.checkerResults)
+      for (const flag of result.riskFlags) counts.set(flag, (counts.get(flag) ?? 0) + 1);
+  const ranked = [...counts].sort((a, b) => b[1] - a[1]).slice(0, 15);
+  return ranked.length >= 6 ? ranked : ruleFlags.map((flag) => [flag, 0] as [string, number]);
+}
 
 const avatarFill = { hire: "var(--color-teal)", verify: "var(--color-yellow)", avoid: "var(--color-coral)" };
 
@@ -108,7 +138,10 @@ function CodeCard({ title, children }: { title: string; children: string }) {
 }
 
 export default async function Home() {
-  const [recent, total] = await Promise.all([loadRecentReports(4), loadReportCount()]);
+  const [latest, total] = await Promise.all([loadRecentReports(60), loadReportCount()]);
+  const recent = latest.slice(0, 4);
+  const flags = countFlags(latest);
+  const flagRows = [0, 1, 2].map((row) => flags.filter((_, index) => index % 3 === row));
 
   return (
     <main className="text-xl">
@@ -171,61 +204,73 @@ export default async function Home() {
         </section>
 
         {/* Pay the right price */}
-        <section className={`${card} relative overflow-hidden p-8 sm:p-10 lg:min-h-[28rem]`}>
-          <h2 className={cardTitle}>Pay the right price</h2>
-          <p className="mt-4 max-w-2xl leading-relaxed">
-            Every report carries a price ceiling taken from the market range for the task, so a fair seller still gets
-            paid and an overpriced one does not.
-          </p>
-          <div className="mt-10 sm:-mb-16 lg:absolute lg:bottom-0 lg:left-10 lg:mb-[-2.5rem]">
-            <PriceChart />
+        <section
+          className={`${card} relative grid gap-10 p-8 sm:p-10 md:grid-cols-[minmax(0,1fr)_22rem] md:gap-14 lg:min-h-[26rem]`}
+        >
+          <div className="flex flex-col justify-between gap-8">
+            <h2 className={cardTitle}>Pay the right price</h2>
+            <p className="max-w-md leading-relaxed">
+              AgentBond compares the quote with the market range for the task. A trusted seller can charge up to the top
+              of the range. A risky one gets capped at the bottom.
+            </p>
+          </div>
+          <div className="md:-mb-20 md:self-end">
+            <BenchmarkChart ranges={benchmarkRanges} />
           </div>
         </section>
 
         {/* Verdicts */}
-        <section className={`${card} p-8 sm:p-10`}>
+        <section className={`${card} p-8 sm:p-10 md:mt-20`}>
           <h2 className={cardTitle}>Hire, verify first, or avoid</h2>
-          <ul className="mt-24 space-y-4 text-lg">
+          <p className="mt-4 max-w-2xl leading-relaxed">
+            The four checks add up to a trust score out of 100. The score decides the verdict and how much to pay.
+          </p>
+          <ul className="mt-16 space-y-4 text-lg">
             {verdictBullets.map((bullet) => (
-              <li className="flex gap-4" key={bullet.action}>
+              <li className="flex gap-4" key={bullet}>
                 <CheckIcon />
-                {bullet.text}
+                {bullet}
               </li>
             ))}
           </ul>
         </section>
 
         {/* Plug it in */}
-        <section className={`${card} grid gap-10 p-8 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]`}>
+        <section className={`${card} grid gap-10 p-8 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
           <div className="flex flex-col justify-between gap-10">
             <h2 className={cardTitle}>Plug it into any agent</h2>
-            <p className="max-w-sm leading-relaxed">
-              One POST before every payment. The answer is shaped for CAP services, and every report can be anchored on
-              Base so nobody edits it later.
+            <p className="max-w-md leading-relaxed">
+              Call <code className="font-mono text-base">/api/risk-check</code> from your app, or{" "}
+              <code className="font-mono text-base">/api/cap/generate-risk-report</code> from a CAP service. Anchor the
+              report hash on Base Sepolia with any browser wallet.
             </p>
           </div>
-          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5">
-            <div className="space-y-5">
-              <Tile fill="var(--color-teal)" kind="code" />
-              <Tile fill="var(--color-coral)" kind="chain" />
-            </div>
-            <div className="light rounded-2xl border border-black bg-white p-4 font-mono text-[12px] leading-relaxed text-black shadow-[6px_6px_0_0_#000]">
-              <p className="mb-2 flex gap-1.5">
+          <div className="grid items-center gap-6 sm:grid-cols-[auto_minmax(0,1fr)]">
+            <ul className="grid grid-cols-4 gap-4 sm:grid-cols-2">
+              {integrations.map((item) => (
+                <li className="flex flex-col items-center gap-2 text-center text-[13px] sm:text-sm" key={item.label}>
+                  <Tile fill={item.fill} kind={item.kind} />
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+            <div className="light rounded-2xl border border-black bg-white p-5 font-mono text-[12px] leading-relaxed text-black shadow-[6px_6px_0_0_#000]">
+              <p className="mb-3 flex gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-coral" />
                 <span className="h-2.5 w-2.5 rounded-full bg-yellow" />
                 <span className="h-2.5 w-2.5 rounded-full bg-teal" />
               </p>
-              POST /api/cap/generate-risk-report
+              <span className="text-graphite">200 OK</span>
               <br />
-              <span className="text-graphite">→</span> trustScore: <b>96</b>
+              trustScore: <b>{exampleReport.trustScore}</b>
               <br />
-              <span className="text-graphite">→</span> action: <b>&quot;hire&quot;</b>
+              riskLevel: <b>&quot;low&quot;</b>
               <br />
-              <span className="text-graphite">→</span> maxPrice: <b>3</b>
-            </div>
-            <div className="space-y-5">
-              <Tile className="translate-x-3" fill="var(--color-yellow)" kind="bot" />
-              <Tile className="translate-x-3" fill="var(--color-sky)" kind="wallet" />
+              recommendedAction: <b>&quot;hire&quot;</b>
+              <br />
+              recommendedMaxPriceUsdc: <b>{exampleReport.recommendedMaxPriceUsdc}</b>
+              <br />
+              reportHash: <b>&quot;{shortHex(exampleReport.reportHash, 6, 4)}&quot;</b>
             </div>
           </div>
         </section>
@@ -330,7 +375,7 @@ export default async function Home() {
       <section className="overflow-hidden py-20 text-center">
         <h2 className={bigTitle}>Every red flag, named</h2>
         <p className="mx-auto mt-5 max-w-xl px-5">
-          The problems AgentBond spots in a seller, straight from real reports.
+          What AgentBond flagged in the latest checks, and how many times each came up.
         </p>
         <div className="mt-14 space-y-5">
           {flagRows.map((row, rowIndex) => (
@@ -338,10 +383,13 @@ export default async function Home() {
               className={`flex items-center justify-center gap-5 whitespace-nowrap ${rowIndex === 1 ? "translate-x-16" : ""}`}
               key={rowIndex}
             >
-              {[...row, ...row].map(([icon, label], index) => (
-                <span className="flex items-center gap-5" key={`${label}-${index}`}>
-                  <FlatIcon className="h-12 w-12 shrink-0" kind={icon} />
-                  <span className="rounded-full border border-line px-6 py-2.5 text-2xl">{label}</span>
+              {[...row, ...row].map(([flag, count], index) => (
+                <span aria-hidden={index >= row.length} className="flex items-center gap-5" key={`${flag}-${index}`}>
+                  <FlatIcon className="h-12 w-12 shrink-0" kind={flagIcon(flag)} />
+                  <span className="flex items-center gap-3 rounded-full border border-line px-6 py-2.5 text-2xl">
+                    {flag.replaceAll("_", " ")}
+                    {count > 0 && <span className="text-lg tabular-nums text-graphite">{count}</span>}
+                  </span>
                 </span>
               ))}
             </div>
@@ -354,6 +402,10 @@ export default async function Home() {
         <div className={wrap}>
           <div className={`${card} p-8 sm:p-10`}>
             <h2 className={cardTitle}>Don&apos;t pay blind. That&apos;s scary!</h2>
+            <p className="mt-4 max-w-2xl leading-relaxed">
+              Try it with one of the four demo sellers, or paste any output you got from an agent. The report gets a
+              link you can share.
+            </p>
           </div>
           <div className="mt-8">
             <CheckForm sellers={demoAgents} />
@@ -369,14 +421,6 @@ export default async function Home() {
         </p>
         <div className="mt-12">
           <ScoreWeights />
-        </div>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {verdictBullets.map((verdict) => (
-            <div className={`${card} p-8`} key={verdict.action}>
-              <VerdictBadge action={verdict.action} size="lg" />
-              <p className="mt-6 text-lg leading-relaxed text-graphite">{verdict.text}</p>
-            </div>
-          ))}
         </div>
       </section>
 
