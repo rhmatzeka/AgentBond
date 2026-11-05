@@ -45,6 +45,14 @@ const heroCoins = [
   { className: "bottom-[-4.5rem] right-[30%] w-40 rotate-[78deg]" },
 ];
 
+/** Smaller coins tucked into the corners on phones, clear of the heading. */
+const heroCoinsSmall = [
+  { className: "-left-7 top-3 w-20 -rotate-[28deg] sm:w-28" },
+  { className: "-right-6 top-4 w-16 rotate-[30deg] sm:w-24" },
+  { className: "-left-5 bottom-6 w-14 rotate-[64deg] sm:w-20" },
+  { className: "-right-8 -bottom-6 w-24 -rotate-[50deg] sm:w-28" },
+];
+
 const verdictBullets = [
   "Hire at 70 or more: pay up to the top of the market range.",
   "Verify first at 40 to 69: pay per milestone, capped at the middle of the range.",
@@ -116,7 +124,7 @@ const avatarFill = { hire: "var(--color-teal)", verify: "var(--color-yellow)", a
 
 const wrap = "mx-auto max-w-[78rem] px-4 sm:px-6";
 const card = "rounded-3xl border border-line bg-card";
-const cardTitle = "display text-4xl sm:text-[2.6rem]";
+const cardTitle = "display text-[2rem] sm:text-[2.6rem]";
 const bigTitle = "display text-balance text-[clamp(2.75rem,6.5vw,5.5rem)]";
 
 function CheckIcon() {
@@ -131,8 +139,10 @@ function CheckIcon() {
 function CodeCard({ title, children }: { title: string; children: string }) {
   return (
     <div className={`${card} overflow-hidden`}>
-      <p className="border-b border-line px-6 py-3 text-graphite">{title}</p>
-      <pre className="overflow-x-auto p-6 font-mono text-[13px] leading-relaxed">{children}</pre>
+      <p className="border-b border-line px-5 py-3 text-base text-graphite sm:px-6">{title}</p>
+      <pre className="overflow-x-auto whitespace-pre-wrap p-5 font-mono text-[12px] leading-relaxed [overflow-wrap:anywhere] sm:whitespace-pre sm:p-6 sm:text-[13px] sm:[overflow-wrap:normal]">
+        {children}
+      </pre>
     </div>
   );
 }
@@ -144,7 +154,7 @@ export default async function Home() {
   const flagRows = [0, 1, 2].map((row) => flags.filter((_, index) => index % 3 === row));
 
   return (
-    <main className="text-xl">
+    <main className="text-lg sm:text-xl">
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
@@ -158,13 +168,24 @@ export default async function Home() {
             </div>
           ))}
         </div>
-        <div className="relative mx-auto max-w-4xl px-5 pb-28 pt-20 text-center sm:px-8 md:pb-40 md:pt-40">
-          <h1 className="display text-balance text-[clamp(3.25rem,8vw,6.25rem)]">Check before you pay</h1>
+        <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
+          {heroCoinsSmall.map((coin, index) => (
+            <div
+              className={`coin-float absolute ${coin.className}`}
+              key={index}
+              style={{ animationDelay: `${index * -1.6}s` }}
+            >
+              <Coin face={{ text: "A" }} fill={PINK} />
+            </div>
+          ))}
+        </div>
+        <div className="relative mx-auto max-w-4xl px-5 pb-20 pt-16 text-center sm:px-8 sm:pb-28 sm:pt-24 md:pb-40 md:pt-40">
+          <h1 className="display text-balance text-[clamp(3rem,8vw,6.25rem)]">Check before you pay</h1>
           <p className="mx-auto mt-6 max-w-[34rem] text-balance leading-relaxed">
             A credit check for AI agents. Before your agent pays another one, see if the seller does good work at a fair
             price.
           </p>
-          <div className="mx-auto mt-10 flex max-w-2xl flex-col gap-4 sm:flex-row">
+          <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:mt-10 sm:flex-row sm:gap-4">
             <Link className="nb-btn nb-btn-primary shrink-0" href="#check">
               Check a seller
             </Link>
@@ -184,18 +205,18 @@ export default async function Home() {
         </div>
       </section>
 
-      <div className={`${wrap} space-y-8`}>
+      <div className={`${wrap} space-y-5 sm:space-y-8`}>
         {/* Grade the work */}
-        <section className={`${card} relative grid gap-10 p-8 sm:p-10 md:min-h-[30rem] md:grid-cols-2`}>
-          <div className="flex flex-col justify-between gap-10">
+        <section className={`${card} relative grid gap-8 p-6 sm:gap-10 sm:p-10 lg:min-h-[30rem] lg:grid-cols-2`}>
+          <div className="flex flex-col justify-between gap-6 sm:gap-10">
             <h2 className={cardTitle}>Grade the work, not the pitch</h2>
             <p className="max-w-md leading-relaxed">
               An LLM and plain text checks read the seller&apos;s sample. Instructions hidden inside it are ignored, so
               a spammer cannot talk its way to a good score.
             </p>
           </div>
-          <div className="relative md:-mt-24">
-            <div className="ml-auto max-w-[24rem] rounded-3xl shadow-[8px_8px_0_0_#000]">
+          <div className="relative lg:-mt-24">
+            <div className="mx-auto max-w-[24rem] rounded-3xl lg:mr-0 shadow-[8px_8px_0_0_#000]">
               <ReportSlip compact heading="Example report" report={exampleReport} />
             </div>
             <RoundSticker className="absolute -left-4 top-24 hidden w-28 -rotate-12 lg:block" text="NO SPAM" />
@@ -205,27 +226,27 @@ export default async function Home() {
 
         {/* Pay the right price */}
         <section
-          className={`${card} relative grid gap-10 p-8 sm:p-10 md:grid-cols-[minmax(0,1fr)_22rem] md:gap-14 lg:min-h-[26rem]`}
+          className={`${card} relative grid gap-8 p-6 sm:gap-10 sm:p-10 lg:min-h-[26rem] lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14`}
         >
-          <div className="flex flex-col justify-between gap-8">
+          <div className="flex flex-col justify-between gap-6 sm:gap-8">
             <h2 className={cardTitle}>Pay the right price</h2>
             <p className="max-w-md leading-relaxed">
               AgentBond compares the quote with the market range for the task. A trusted seller can charge up to the top
               of the range. A risky one gets capped at the bottom.
             </p>
           </div>
-          <div className="md:-mb-20 md:self-end">
+          <div className="lg:-mb-20 lg:self-end">
             <BenchmarkChart ranges={benchmarkRanges} />
           </div>
         </section>
 
         {/* Verdicts */}
-        <section className={`${card} p-8 sm:p-10 md:mt-20`}>
+        <section className={`${card} p-6 sm:p-10 lg:mt-20`}>
           <h2 className={cardTitle}>Hire, verify first, or avoid</h2>
           <p className="mt-4 max-w-2xl leading-relaxed">
             The four checks add up to a trust score out of 100. The score decides the verdict and how much to pay.
           </p>
-          <ul className="mt-16 space-y-4 text-lg">
+          <ul className="mt-8 space-y-4 text-base sm:mt-16 sm:text-lg">
             {verdictBullets.map((bullet) => (
               <li className="flex gap-4" key={bullet}>
                 <CheckIcon />
@@ -236,8 +257,8 @@ export default async function Home() {
         </section>
 
         {/* Plug it in */}
-        <section className={`${card} grid gap-10 p-8 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
-          <div className="flex flex-col justify-between gap-10">
+        <section className={`${card} grid gap-8 p-6 sm:gap-10 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
+          <div className="flex flex-col justify-between gap-6 sm:gap-10">
             <h2 className={cardTitle}>Plug it into any agent</h2>
             <p className="max-w-md leading-relaxed">
               Call <code className="font-mono text-base">/api/risk-check</code> from your app, or{" "}
@@ -246,15 +267,18 @@ export default async function Home() {
             </p>
           </div>
           <div className="grid items-center gap-6 sm:grid-cols-[auto_minmax(0,1fr)]">
-            <ul className="grid grid-cols-4 gap-4 sm:grid-cols-2">
+            <ul className="grid grid-cols-4 gap-2 sm:grid-cols-2 sm:gap-4">
               {integrations.map((item) => (
-                <li className="flex flex-col items-center gap-2 text-center text-[13px] sm:text-sm" key={item.label}>
+                <li
+                  className="flex flex-col items-center gap-2 text-center text-[12px] leading-tight sm:text-sm"
+                  key={item.label}
+                >
                   <Tile fill={item.fill} kind={item.kind} />
                   {item.label}
                 </li>
               ))}
             </ul>
-            <div className="light rounded-2xl border border-black bg-white p-5 font-mono text-[12px] leading-relaxed text-black shadow-[6px_6px_0_0_#000]">
+            <div className="light overflow-hidden rounded-2xl border border-black bg-white p-4 font-mono text-[11px] sm:p-5 sm:text-[12px] leading-relaxed text-black shadow-[6px_6px_0_0_#000]">
               <p className="mb-3 flex gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-coral" />
                 <span className="h-2.5 w-2.5 rounded-full bg-yellow" />
@@ -276,20 +300,20 @@ export default async function Home() {
         </section>
 
         {/* Illustrations */}
-        <div className="grid gap-8 md:grid-cols-2">
-          <figure className={`${card} relative p-8 sm:p-10`}>
-            <figcaption className="relative z-10 inline-block rounded-2xl border border-line bg-card px-6 py-4">
+        <div className="grid gap-5 sm:gap-8 md:grid-cols-2">
+          <figure className={`${card} relative p-6 sm:p-10`}>
+            <figcaption className="relative z-10 inline-block rounded-2xl border border-line bg-card px-5 py-3 sm:px-6 sm:py-4">
               Instead of paying blind…
             </figcaption>
             <div className="mx-auto -mt-8 max-w-sm">
               <PayingBlind />
             </div>
           </figure>
-          <figure className={`${card} relative flex flex-col p-8 sm:p-10`}>
+          <figure className={`${card} relative flex flex-col p-6 sm:p-10`}>
             <div className="mx-auto max-w-sm">
               <CheckedFirst />
             </div>
-            <figcaption className="relative z-10 -mt-8 self-center rounded-2xl border border-line bg-card px-6 py-4">
+            <figcaption className="relative z-10 -mt-8 self-center rounded-2xl border border-line bg-card px-5 py-3 sm:px-6 sm:py-4">
               …check the seller first!
             </figcaption>
           </figure>
@@ -297,9 +321,11 @@ export default async function Home() {
       </div>
 
       {/* Yellow band */}
-      <section className="pt-28">
-        <p className="display px-5 pb-16 text-center text-3xl sm:text-4xl">You know that agent you are about to pay?</p>
-        <div className="relative h-72 bg-yellow text-black">
+      <section className="pt-16 sm:pt-28">
+        <p className="display text-balance px-5 pb-10 text-center text-[1.75rem] sm:pb-16 sm:text-4xl">
+          You know that agent you are about to pay?
+        </p>
+        <div className="relative h-56 bg-yellow text-black sm:h-72">
           <div aria-hidden className="absolute inset-x-[2.5%] inset-y-6 rounded-3xl border border-black/30" />
           {loopLabels.map((label) => (
             <p
@@ -312,16 +338,16 @@ export default async function Home() {
               {label.text}
             </p>
           ))}
-          <WavingRobot className="absolute left-1/2 top-1/2 h-48 -translate-x-1/2 -translate-y-1/2 sm:h-56" />
+          <WavingRobot className="absolute left-1/2 top-1/2 h-40 -translate-x-1/2 -translate-y-1/2 sm:h-56" />
         </div>
-        <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:py-24">
-          <p className="display text-balance text-4xl sm:text-5xl">
+        <div className="mx-auto max-w-3xl px-5 py-14 text-center sm:py-24">
+          <p className="display text-balance text-[2rem] sm:text-5xl">
             We want your agent to buy from lots of agents, and to know which ones are worth it.
           </p>
           <p className="mx-auto mt-6 max-w-xl leading-relaxed">
             You do not have to read every sample yourself. Run a check and get a verdict and a price in seconds.
           </p>
-          <Link className="nb-btn nb-btn-primary mt-9" href="#check">
+          <Link className="nb-btn nb-btn-primary mt-8 w-full sm:mt-9 sm:w-auto" href="#check">
             Find out how
           </Link>
         </div>
@@ -329,11 +355,11 @@ export default async function Home() {
 
       {/* Big number */}
       {total !== null && total > 0 && (
-        <section className="px-5 py-20 text-center sm:py-28">
+        <section className="px-5 py-12 text-center sm:py-28">
           <p className="display text-[clamp(6rem,18vw,13rem)] leading-none tracking-[-0.04em] tabular-nums">
             {total.toLocaleString("en-US")}
           </p>
-          <p className="display mx-auto mt-10 max-w-xl text-balance text-3xl sm:text-4xl">
+          <p className="display mx-auto mt-6 max-w-xl text-balance text-[1.75rem] sm:mt-10 sm:text-4xl">
             Credit checks run on AgentBond so far.
           </p>
         </section>
@@ -341,29 +367,32 @@ export default async function Home() {
 
       {/* Quotes from real reports */}
       {recent.length > 0 && (
-        <section className={`${wrap} space-y-12 pb-24`}>
-          {recent.map((report) => (
-            <figure key={report.reportId}>
-              <blockquote className={`${card} px-8 py-9 sm:px-10`}>
-                <p aria-hidden className="font-serif text-3xl leading-none">
-                  “
-                </p>
-                <p className="mt-3 leading-relaxed">{report.reasons.join(" ")}</p>
-              </blockquote>
-              <figcaption className="mt-5 flex items-center gap-4 px-3">
-                <RobotAvatar fill={avatarFill[report.recommendedAction]} />
-                <span>
-                  <Link className="block font-medium hover:underline" href={`/reports/${report.reportId}`}>
-                    {report.sellerAgentName}
-                  </Link>
-                  <span className="block text-base text-graphite">
-                    Scored {report.trustScore}, {verdictLabel[report.recommendedAction].toLowerCase()}
+        <section className={`${wrap} pb-16 sm:pb-24`}>
+          <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:block md:space-y-12 md:overflow-visible md:px-0 md:pb-0">
+            {recent.map((report) => (
+              <figure className="flex w-[86%] shrink-0 snap-center flex-col md:w-auto" key={report.reportId}>
+                <blockquote className={`${card} flex-1 px-6 py-7 sm:px-10 sm:py-9`}>
+                  <p aria-hidden className="font-serif text-3xl leading-none">
+                    “
+                  </p>
+                  <p className="mt-3 leading-relaxed">{report.reasons.join(" ")}</p>
+                </blockquote>
+                <figcaption className="mt-5 flex items-center gap-4 px-3">
+                  <RobotAvatar fill={avatarFill[report.recommendedAction]} />
+                  <span>
+                    <Link className="block font-medium hover:underline" href={`/reports/${report.reportId}`}>
+                      {report.sellerAgentName}
+                    </Link>
+                    <span className="block text-base text-graphite">
+                      Scored {report.trustScore}, {verdictLabel[report.recommendedAction].toLowerCase()}
+                    </span>
                   </span>
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-          <div className="text-center">
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p className="mt-4 text-center text-sm text-graphite md:hidden">Swipe for more</p>
+          <div className="mt-8 text-center md:mt-12">
             <Link className="nb-btn bg-card" href="/reports">
               See all reports
             </Link>
@@ -372,12 +401,24 @@ export default async function Home() {
       )}
 
       {/* Flags */}
-      <section className="overflow-hidden py-20 text-center">
-        <h2 className={bigTitle}>Every red flag, named</h2>
+      <section className="overflow-hidden py-14 text-center sm:py-20">
+        <h2 className={`${bigTitle} px-4`}>Every red flag, named</h2>
         <p className="mx-auto mt-5 max-w-xl px-5">
           What AgentBond flagged in the latest checks, and how many times each came up.
         </p>
-        <div className="mt-14 space-y-5">
+        <ul className="mx-auto mt-10 flex max-w-md flex-wrap justify-center gap-2 px-4 md:hidden">
+          {flags.slice(0, 10).map(([flag, count]) => (
+            <li
+              className="flex items-center gap-1.5 rounded-full border border-line py-1 pl-1.5 pr-3.5 text-[15px]"
+              key={flag}
+            >
+              <FlatIcon className="h-6 w-6 shrink-0" kind={flagIcon(flag)} />
+              {flag.replaceAll("_", " ")}
+              {count > 0 && <span className="text-[13px] tabular-nums text-graphite">{count}</span>}
+            </li>
+          ))}
+        </ul>
+        <div aria-hidden className="mt-14 hidden space-y-5 md:block">
           {flagRows.map((row, rowIndex) => (
             <div
               className={`flex items-center justify-center gap-5 whitespace-nowrap ${rowIndex === 1 ? "translate-x-16" : ""}`}
@@ -398,35 +439,35 @@ export default async function Home() {
       </section>
 
       {/* Check form */}
-      <section className="scroll-mt-28 py-20" id="check">
+      <section className="scroll-mt-20 py-14 sm:scroll-mt-28 sm:py-20" id="check">
         <div className={wrap}>
-          <div className={`${card} p-8 sm:p-10`}>
+          <div className={`${card} p-6 sm:p-10`}>
             <h2 className={cardTitle}>Don&apos;t pay blind. That&apos;s scary!</h2>
             <p className="mt-4 max-w-2xl leading-relaxed">
               Try it with one of the four demo sellers, or paste any output you got from an agent. The report gets a
               link you can share.
             </p>
           </div>
-          <div className="mt-8">
+          <div className="mt-5 sm:mt-8">
             <CheckForm sellers={demoAgents} />
           </div>
         </div>
       </section>
 
       {/* Score */}
-      <section className={`${wrap} py-20`}>
+      <section className={`${wrap} py-14 sm:py-20`}>
         <h2 className={bigTitle}>How the score is built</h2>
         <p className="mt-5 max-w-2xl leading-relaxed text-graphite">
           Four checks run on every request. Their scores are weighted into one trust score out of 100.
         </p>
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-12">
           <ScoreWeights />
         </div>
       </section>
 
       {/* API */}
-      <section className="scroll-mt-28 py-20" id="api">
-        <div className={`${wrap} grid gap-12 lg:grid-cols-[24rem_minmax(0,1fr)]`}>
+      <section className="scroll-mt-20 py-14 sm:scroll-mt-28 sm:py-20" id="api">
+        <div className={`${wrap} grid gap-8 sm:gap-12 lg:grid-cols-[24rem_minmax(0,1fr)]`}>
           <div>
             <h2 className={bigTitle}>Call it from your agent</h2>
             <p className="mt-5 leading-relaxed text-graphite">
@@ -434,7 +475,7 @@ export default async function Home() {
               Limited to 20 checks per minute per client.
             </p>
           </div>
-          <div className="min-w-0 space-y-6">
+          <div className="min-w-0 space-y-5 sm:space-y-6">
             <CodeCard title="Request">{requestExample}</CodeCard>
             <CodeCard title="Response">{responseExample}</CodeCard>
           </div>
@@ -442,16 +483,16 @@ export default async function Home() {
       </section>
 
       {/* Closing */}
-      <section className="pt-20 text-center">
+      <section className="pt-14 text-center sm:pt-20">
         <h2 className="display text-balance px-5 text-[clamp(2.5rem,5.5vw,4.5rem)]">
           Check the seller.
           <br />
           Your agent will thank you.
         </h2>
-        <Link className="nb-btn nb-btn-primary mt-10" href="#check">
+        <Link className="nb-btn nb-btn-primary mt-8 sm:mt-10" href="#check">
           Run a free check
         </Link>
-        <StreetScene className="mt-20 block h-56 w-full sm:h-72" />
+        <StreetScene className="mt-14 block h-48 w-full sm:mt-20 sm:h-72" />
       </section>
     </main>
   );

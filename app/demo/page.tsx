@@ -8,14 +8,14 @@ export const metadata: Metadata = { title: "Demo sellers" };
 
 export default function DemoPage() {
   return (
-    <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
+    <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-8 sm:pb-24 sm:pt-12">
       <h1 className="display text-[clamp(2.5rem,5.5vw,4.5rem)]">Demo sellers</h1>
       <p className="mt-4 max-w-2xl text-lg text-graphite">
         Four synthetic sellers, each built to show one risk pattern: a reliable specialist, a cheap spammer, a decent
         seller that overcharges, and a newcomer with no history.
       </p>
 
-      <div className="mt-12 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid gap-5 sm:mt-12 sm:gap-6 lg:grid-cols-2">
         {demoAgents.map((agent) => {
           const total = agent.completedJobs + agent.failedJobs;
           const reputation = calculateReputationScore(agent);
@@ -29,9 +29,9 @@ export default function DemoPage() {
           return (
             <article className="nb-card flex flex-col overflow-hidden" key={agent.id}>
               <div aria-hidden className={`h-4 border-b border-line ${scoreTone(reputation)}`} />
-              <div className="flex flex-1 flex-col p-6">
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="flex-1">
-                  <h2 className="display text-3xl">{agent.name}</h2>
+                  <h2 className="display text-[1.75rem] sm:text-3xl">{agent.name}</h2>
                   <p className="mt-1 text-graphite">{agent.description}</p>
                   <p className="mt-3 text-sm text-graphite">
                     Asks {formatUsdc(agent.defaultPriceUsdc)} for{" "}
@@ -41,10 +41,10 @@ export default function DemoPage() {
                     )}
                   </p>
                 </div>
-                <dl className="mt-6 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-line pt-5 sm:grid-cols-5">
+                <dl className="mt-6 grid grid-cols-3 gap-x-3 gap-y-5 border-t border-line pt-5 sm:grid-cols-5">
                   {stats.map(([label, value]) => (
-                    <div key={label}>
-                      <dt className="text-sm text-graphite">{label}</dt>
+                    <div className="flex flex-col justify-end" key={label}>
+                      <dt className="text-[13px] leading-tight text-graphite sm:text-sm">{label}</dt>
                       <dd className="display mt-1 whitespace-nowrap text-2xl tabular-nums">{value}</dd>
                     </div>
                   ))}
@@ -55,7 +55,7 @@ export default function DemoPage() {
         })}
       </div>
 
-      <Link className="mt-12 nb-btn nb-btn-primary" href="/#check">
+      <Link className="mt-10 nb-btn nb-btn-primary w-full sm:mt-12 sm:w-auto" href="/#check">
         Check one of them
       </Link>
     </main>

@@ -108,10 +108,10 @@ export function Tile({
   return (
     <span
       aria-hidden
-      className={`grid h-20 w-20 place-items-center rounded-2xl border-2 border-black shadow-[4px_4px_0_0_#000] ${className}`}
+      className={`grid h-14 w-14 place-items-center rounded-xl border-2 border-black shadow-[3px_3px_0_0_#000] sm:h-20 sm:w-20 sm:rounded-2xl sm:shadow-[4px_4px_0_0_#000] ${className}`}
       style={{ background: fill }}
     >
-      <svg className="h-10 w-10" viewBox="0 0 40 40">
+      <svg className="h-7 w-7 sm:h-10 sm:w-10" viewBox="0 0 40 40">
         <TileGlyph kind={kind} />
       </svg>
     </span>

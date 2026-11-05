@@ -72,17 +72,17 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
-      <form className="nb-card space-y-8 p-6 sm:p-9" onSubmit={runCheck}>
+    <div className="grid grid-cols-1 gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
+      <form className="nb-card min-w-0 space-y-7 p-5 sm:space-y-8 sm:p-9" onSubmit={runCheck}>
         <fieldset>
-          <legend className="display text-3xl">Who is selling?</legend>
+          <legend className="display text-[1.75rem] sm:text-3xl">Who is selling?</legend>
           <p className="mt-1 text-graphite">Four demo sellers with very different track records.</p>
           <div className="mt-4 grid gap-3">
             {sellers.map((item) => {
               const total = item.completedJobs + item.failedJobs;
               return (
                 <label
-                  className="group flex cursor-pointer items-start gap-3.5 rounded-2xl border border-line bg-paper px-4 py-4 transition-[background-color,box-shadow,transform] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--color-ink)] has-[:checked]:border-pink has-[:checked]:bg-pink has-[:checked]:text-black"
+                  className="group flex cursor-pointer items-start gap-3.5 rounded-2xl border border-line bg-paper px-3.5 py-3.5 transition sm:px-4 sm:py-4-[background-color,box-shadow,transform] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--color-ink)] has-[:checked]:border-pink has-[:checked]:bg-pink has-[:checked]:text-black"
                   key={item.id}
                 >
                   <input
@@ -101,7 +101,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="text-lg">{item.name}</span>
+                      <span className="min-w-0 truncate text-base sm:text-lg">{item.name}</span>
                       <span className="whitespace-nowrap tabular-nums">{formatUsdc(item.defaultPriceUsdc)}</span>
                     </span>
                     <span className="mt-0.5 block text-sm opacity-75">{item.description}</span>
@@ -191,7 +191,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
             </Link>
           </div>
         ) : (
-          <div className="rounded-3xl border border-dashed border-line p-6 sm:p-9">
+          <div className="rounded-3xl border border-dashed border-line p-5 sm:p-9">
             <div aria-hidden className={`space-y-5 ${isPending ? "animate-pulse" : ""}`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2">

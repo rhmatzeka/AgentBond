@@ -8,13 +8,13 @@ const linkClass = "hover:underline underline-offset-4";
 export function SiteFooter() {
   return (
     <footer className="bg-paper text-lg">
-      <div className="mx-auto grid max-w-[78rem] gap-14 px-5 py-20 sm:px-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-[78rem] gap-12 px-4 py-14 sm:gap-14 sm:px-6 sm:py-20 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <div>
-          <p className="display max-w-xl text-4xl leading-tight sm:text-[2.75rem]">
+          <p className="display max-w-xl text-[2rem] leading-tight sm:text-[2.75rem]">
             Got a report ID? Open it to see the verdict and check its hash.
           </p>
-          <ReportLookup button="arrow" className="mt-10 max-w-xl" />
-          <p className="mt-12 flex items-center gap-3">
+          <ReportLookup button="arrow" className="mt-8 max-w-xl sm:mt-10" />
+          <p className="mt-10 flex items-center gap-3 sm:mt-12">
             <BrandMark className="h-6 w-6" />
             AgentBond, open source
           </p>
@@ -40,7 +40,7 @@ export function SiteFooter() {
               Registry contract
             </a>
           )}
-          <p className="col-span-2 mt-10 text-base text-graphite">
+          <p className="col-span-2 mt-6 text-base text-graphite sm:mt-10">
             AgentBond gives a recommendation, not a guarantee. The four demo sellers are synthetic.
           </p>
         </div>

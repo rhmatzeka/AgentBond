@@ -29,7 +29,7 @@ export default async function ReportPage({ params }: Props) {
   const created = new Date(report.createdAt);
 
   return (
-    <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
+    <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-8 sm:pb-24 sm:pt-12">
       <Link className="nb-btn bg-card px-4 py-2 text-[15px]" href="/reports">
         All reports
       </Link>
@@ -43,13 +43,13 @@ export default async function ReportPage({ params }: Props) {
         </time>
       </p>
 
-      <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:gap-12">
+      <div className="mt-8 grid gap-8 sm:mt-12 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:gap-12">
         <ReportSlip report={report}>
           <AnchorPanel report={report} />
         </ReportSlip>
 
         <div className="space-y-6">
-          <section className="nb-card p-8">
+          <section className="nb-card p-6 sm:p-8">
             <h2 className="display text-2xl">What was checked</h2>
             <p className="mt-3 text-lg leading-relaxed">
               {report.sampleTask ? (
@@ -60,7 +60,7 @@ export default async function ReportPage({ params }: Props) {
             </p>
           </section>
 
-          <section className="nb-card p-8">
+          <section className="nb-card p-6 sm:p-8">
             <h2 className="display text-2xl">Why this verdict</h2>
             <ul className="mt-4 space-y-3">
               {report.reasons.map((reason) => (
@@ -72,7 +72,7 @@ export default async function ReportPage({ params }: Props) {
             </ul>
           </section>
 
-          <section className={`nb-card p-8 ${intact ? "border-teal" : "border-coral"}`}>
+          <section className={`nb-card p-6 sm:p-8 ${intact ? "border-teal" : "border-coral"}`}>
             <h2 className="display text-2xl">Integrity</h2>
             <p className="mt-3 font-medium">
               {intact ? "The stored report matches its hash." : "The stored report does not match its hash."}

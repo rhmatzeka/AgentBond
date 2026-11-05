@@ -10,10 +10,10 @@ export default async function ReportsPage() {
   const reports = await loadRecentReports(50);
 
   return (
-    <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
+    <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-8 sm:pb-24 sm:pt-12">
       <h1 className="display text-[clamp(2.5rem,5.5vw,4.5rem)]">Reports</h1>
       <p className="mt-4 max-w-2xl text-lg text-graphite">The 50 most recent credit checks, newest first.</p>
-      <div className="mt-10">
+      <div className="mt-8 sm:mt-10">
         {reports.length > 0 ? (
           <ReportsTable reports={reports} />
         ) : (
