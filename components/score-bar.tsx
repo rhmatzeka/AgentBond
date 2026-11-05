@@ -9,6 +9,7 @@ export function ScoreBar({ score, size = "sm" }: { score: number; size?: "sm" | 
     >
       <div
         className={`h-full rounded-full border-r border-line ${scoreTone(score)} ${score === 0 ? "hidden" : ""}`}
+        data-bar
         style={{ width: `${score}%` }}
       />
     </div>

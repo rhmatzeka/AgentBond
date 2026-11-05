@@ -1,10 +1,13 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { AnchorPanel } from "@/components/anchor-panel";
+import { motionEnabled } from "@/components/motion";
 import { ReportSlip } from "@/components/report-slip";
 import { formatUsdc } from "@/lib/format";
+import { printSlip } from "@/lib/motion";
 import type { SellerAgent, TaskType } from "@/lib/types/agent";
 import type { RiskReport } from "@/lib/types/report";
 
@@ -21,6 +24,15 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const resultRef = useRef<HTMLDivElement>(null);
+
+  // Every new report feeds out of the printer.
+  useGSAP(
+    () => {
+      const slip = resultRef.current?.querySelector<HTMLElement>('[data-anim="print"]');
+      if (slip && motionEnabled()) printSlip(slip, { onScroll: false });
+    },
+    { dependencies: [report?.reportId], revertOnUpdate: true },
+  );
 
   // On narrow screens the slip prints below the form, so bring it into view.
   useEffect(() => {
@@ -73,7 +85,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
 
   return (
     <div className="grid grid-cols-1 gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
-      <form className="nb-card min-w-0 space-y-7 p-5 sm:space-y-8 sm:p-9" onSubmit={runCheck}>
+      <form className="nb-card min-w-0 space-y-7 p-5 sm:space-y-8 sm:p-9" data-anim="slap" onSubmit={runCheck}>
         <fieldset>
           <legend className="display text-[1.75rem] sm:text-3xl">Who is selling?</legend>
           <p className="mt-1 text-graphite">Four demo sellers with very different track records.</p>
@@ -180,7 +192,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
       <div aria-live="polite" className="scroll-mt-4" ref={resultRef}>
         {report ? (
           <div className="space-y-4">
-            <ReportSlip animateVerdict key={report.reportId} report={report}>
+            <ReportSlip key={report.reportId} report={report}>
               <AnchorPanel key={report.reportId} onAnchored={setReport} report={report} />
             </ReportSlip>
             <Link
@@ -191,7 +203,7 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
             </Link>
           </div>
         ) : (
-          <div className="rounded-3xl border border-dashed border-line p-5 sm:p-9">
+          <div className="rounded-3xl border border-dashed border-line p-5 sm:p-9" data-anim="slap">
             <div aria-hidden className={`space-y-5 ${isPending ? "animate-pulse" : ""}`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2">

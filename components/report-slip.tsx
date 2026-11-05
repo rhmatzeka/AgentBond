@@ -6,13 +6,11 @@ import type { RiskReport } from "@/lib/types/report";
 
 export function ReportSlip({
   report,
-  animateVerdict = false,
   heading = "Risk report",
   compact = false,
   children,
 }: {
   report: RiskReport;
-  animateVerdict?: boolean;
   heading?: string;
   /** Scores only, without notes, flags or the hash footer. */
   compact?: boolean;
@@ -27,6 +25,7 @@ export function ReportSlip({
     <article
       aria-label={`${heading} for ${report.sellerAgentName}`}
       className="light overflow-hidden rounded-3xl border border-line bg-card"
+      data-anim="print"
     >
       <header className="flex items-center justify-between gap-4 border-b border-line px-6 py-3.5">
         <p className="text-[15px] font-medium">{heading}</p>
@@ -39,11 +38,18 @@ export function ReportSlip({
             <h3 className="display break-words text-[1.7rem]">{report.sellerAgentName}</h3>
             <p className="mt-1 text-[15px] text-graphite">Quoted {formatUsdc(report.proposedPriceUsdc)}</p>
           </div>
-          <VerdictBadge action={report.recommendedAction} animate={animateVerdict} />
+          <span className="inline-block" data-stamp>
+            <VerdictBadge action={report.recommendedAction} />
+          </span>
         </div>
 
         <div className="mt-6 flex items-end gap-4">
-          <p className="display text-[6rem] leading-[0.78] tabular-nums tracking-[-0.05em]">{report.trustScore}</p>
+          <p
+            className="display text-[6rem] leading-[0.78] tabular-nums tracking-[-0.05em]"
+            data-count={report.trustScore}
+          >
+            {report.trustScore}
+          </p>
           <p className="pb-1 text-[15px] leading-snug text-graphite">
             trust score
             <br />
@@ -110,7 +116,7 @@ export function ReportSlip({
         <footer className="space-y-2 border-t border-line bg-paper px-6 py-5 text-[15px] text-graphite">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
             Report hash
-            <code className="font-mono text-[13px] text-ink" title={report.reportHash}>
+            <code className="font-mono text-[13px] text-ink" data-hex title={report.reportHash}>
               {shortHex(report.reportHash, 10, 8)}
             </code>
             <CopyButton value={report.reportHash} />

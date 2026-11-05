@@ -7,7 +7,11 @@ const tones = ["bg-pink", "bg-yellow", "bg-teal", "bg-sky"];
 export function ScoreWeights() {
   return (
     <div className="space-y-5">
-      <div aria-hidden className="flex h-11 overflow-hidden rounded-full border border-line sm:h-14">
+      <div
+        aria-hidden
+        className="flex h-11 overflow-hidden rounded-full border border-line sm:h-14"
+        data-anim="grow-children"
+      >
         {order.map((key, index) => (
           <div
             className={`${tones[index]} flex min-w-0 items-center justify-center border-black text-[13px] text-black sm:justify-start sm:px-5 sm:text-base [&:not(:last-child)]:border-r`}
@@ -18,7 +22,7 @@ export function ScoreWeights() {
           </div>
         ))}
       </div>
-      <dl className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4" data-anim="pop-children" data-delay="0.3">
         {order.map((key, index) => (
           <div className="nb-card p-5 sm:p-8" key={key}>
             <dt>

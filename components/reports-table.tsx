@@ -15,7 +15,10 @@ export function ReportsTable({ reports }: { reports: RiskReport[] }) {
 /** Phones: one tappable row per report, score up front. */
 function ReportsList({ reports }: { reports: RiskReport[] }) {
   return (
-    <ul className="divide-y divide-line overflow-hidden rounded-3xl border border-line bg-card md:hidden">
+    <ul
+      className="divide-y divide-line overflow-hidden rounded-3xl border border-line bg-card md:hidden"
+      data-anim="rows"
+    >
       {reports.map((report) => (
         <li key={report.reportId}>
           <Link
@@ -61,7 +64,7 @@ function ReportsGrid({ reports }: { reports: RiskReport[] }) {
             <th className="px-5 py-4.5 text-right font-normal">Checked</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-line">
+        <tbody className="divide-y divide-line" data-anim="rows">
           {reports.map((report) => (
             <tr className="transition-colors hover:bg-mist" key={report.reportId}>
               <td className="px-5 py-4">

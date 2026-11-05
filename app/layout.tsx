@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Motion, motionBootScript } from "@/components/motion";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -20,13 +21,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html className={`${dmSans.variable} ${plexMono.variable} antialiased`} lang="en">
+    <html className={`${dmSans.variable} ${plexMono.variable} antialiased`} lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionBootScript }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
         <Providers>
           <SiteHeader />
           <div className="flex-1">{children}</div>
           <SiteFooter />
         </Providers>
+        <Motion />
       </body>
     </html>
   );

@@ -9,8 +9,10 @@ export const metadata: Metadata = { title: "Demo sellers" };
 export default function DemoPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-8 sm:pb-24 sm:pt-12">
-      <h1 className="display text-[clamp(2.5rem,5.5vw,4.5rem)]">Demo sellers</h1>
-      <p className="mt-4 max-w-2xl text-lg text-graphite">
+      <h1 className="display text-[clamp(2.5rem,5.5vw,4.5rem)]" data-anim="scramble">
+        Demo sellers
+      </h1>
+      <p className="mt-4 max-w-2xl text-lg text-graphite" data-anim="rise" data-delay="0.4">
         Four synthetic sellers, each built to show one risk pattern: a reliable specialist, a cheap spammer, a decent
         seller that overcharges, and a newcomer with no history.
       </p>
@@ -27,7 +29,7 @@ export default function DemoPage() {
             ["Reputation", reputation],
           ] as const;
           return (
-            <article className="nb-card flex flex-col overflow-hidden" key={agent.id}>
+            <article className="nb-card flex flex-col overflow-hidden" data-anim="slap" key={agent.id}>
               <div aria-hidden className={`h-4 border-b border-line ${scoreTone(reputation)}`} />
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="flex-1">
@@ -55,7 +57,7 @@ export default function DemoPage() {
         })}
       </div>
 
-      <Link className="mt-10 nb-btn nb-btn-primary w-full sm:mt-12 sm:w-auto" href="/#check">
+      <Link className="mt-10 nb-btn nb-btn-primary w-full sm:mt-12 sm:w-auto" data-anim="pop" href="/#check">
         Check one of them
       </Link>
     </main>

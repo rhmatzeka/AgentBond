@@ -10,16 +10,18 @@ export function SiteFooter() {
     <footer className="bg-paper text-lg">
       <div className="mx-auto grid max-w-[78rem] gap-12 px-4 py-14 sm:gap-14 sm:px-6 sm:py-20 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <div>
-          <p className="display max-w-xl text-[2rem] leading-tight sm:text-[2.75rem]">
+          <p className="display max-w-xl text-[2rem] leading-tight sm:text-[2.75rem]" data-anim="words">
             Got a report ID? Open it to see the verdict and check its hash.
           </p>
-          <ReportLookup button="arrow" className="mt-8 max-w-xl sm:mt-10" />
+          <div data-anim="rise">
+            <ReportLookup button="arrow" className="mt-8 max-w-xl sm:mt-10" />
+          </div>
           <p className="mt-10 flex items-center gap-3 sm:mt-12">
             <BrandMark className="h-6 w-6" />
             AgentBond, open source
           </p>
         </div>
-        <div className="grid grid-cols-2 content-start gap-x-8 gap-y-4">
+        <div className="grid grid-cols-2 content-start gap-x-8 gap-y-4" data-anim="pop-children">
           <Link className={linkClass} href="/#check">
             Check a seller
           </Link>

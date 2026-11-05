@@ -33,10 +33,10 @@ export default async function ReportPage({ params }: Props) {
       <Link className="nb-btn bg-card px-4 py-2 text-[15px]" href="/reports">
         All reports
       </Link>
-      <h1 className="display mt-8 break-words text-[clamp(2.1rem,5.5vw,4.5rem)]">
+      <h1 className="display mt-8 break-words text-[clamp(2.1rem,5.5vw,4.5rem)]" data-anim="scramble">
         Risk report for {report.sellerAgentName}
       </h1>
-      <p className="mt-3 text-lg text-graphite">
+      <p className="mt-3 text-lg text-graphite" data-anim="rise" data-delay="0.4">
         Checked on{" "}
         <time dateTime={report.createdAt}>
           {created.toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "UTC" })} UTC
@@ -49,7 +49,7 @@ export default async function ReportPage({ params }: Props) {
         </ReportSlip>
 
         <div className="space-y-6">
-          <section className="nb-card p-6 sm:p-8">
+          <section className="nb-card p-6 sm:p-8" data-anim="slap">
             <h2 className="display text-2xl">What was checked</h2>
             <p className="mt-3 text-lg leading-relaxed">
               {report.sampleTask ? (
@@ -60,7 +60,7 @@ export default async function ReportPage({ params }: Props) {
             </p>
           </section>
 
-          <section className="nb-card p-6 sm:p-8">
+          <section className="nb-card p-6 sm:p-8" data-anim="slap">
             <h2 className="display text-2xl">Why this verdict</h2>
             <ul className="mt-4 space-y-3">
               {report.reasons.map((reason) => (
@@ -72,7 +72,7 @@ export default async function ReportPage({ params }: Props) {
             </ul>
           </section>
 
-          <section className={`nb-card p-6 sm:p-8 ${intact ? "border-teal" : "border-coral"}`}>
+          <section className={`nb-card p-6 sm:p-8 ${intact ? "border-teal" : "border-coral"}`} data-anim="slap">
             <h2 className="display text-2xl">Integrity</h2>
             <p className="mt-3 font-medium">
               {intact ? "The stored report matches its hash." : "The stored report does not match its hash."}

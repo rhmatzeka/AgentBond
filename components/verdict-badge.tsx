@@ -10,19 +10,11 @@ const icons: Record<RecommendedAction, Icon> = {
 };
 
 /** Pill per verdict: teal to hire, yellow to verify, coral to avoid, each with its own mark. */
-export function VerdictBadge({
-  action,
-  size = "md",
-  animate = false,
-}: {
-  action: RecommendedAction;
-  size?: "md" | "lg";
-  animate?: boolean;
-}) {
+export function VerdictBadge({ action, size = "md" }: { action: RecommendedAction; size?: "md" | "lg" }) {
   const Mark = icons[action];
   return (
     <span
-      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-black text-black ${verdictTone[action]} ${size === "lg" ? "px-5 py-2 text-xl" : "px-3.5 py-1.5 text-[15px]"} ${animate ? "verdict-land" : ""}`}
+      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-black text-black ${verdictTone[action]} ${size === "lg" ? "px-5 py-2 text-xl" : "px-3.5 py-1.5 text-[15px]"}`}
     >
       <Mark aria-hidden className="h-[0.9em] w-[0.9em]" weight="bold" />
       {verdictLabel[action]}

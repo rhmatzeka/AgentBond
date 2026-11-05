@@ -16,9 +16,11 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@neondatabase/serverless": "^1.2.0",
     "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.101.1",
+    "gsap": "^3.15.1",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
