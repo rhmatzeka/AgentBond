@@ -1,6 +1,7 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { shortHex } from "@/lib/format";
 
 export function WalletConnectButton() {
   const { address, isConnected } = useAccount();
@@ -11,22 +12,25 @@ export function WalletConnectButton() {
   if (isConnected && address) {
     return (
       <button
-        className="rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-sm text-white transition hover:border-white/20"
+        className="nb-btn bg-card px-3.5 py-2 font-mono text-[13px] font-medium"
         onClick={() => disconnect()}
         title="Disconnect wallet"
+        type="button"
       >
-        {address.slice(0, 6)}...{address.slice(-4)}
+        {shortHex(address)}
       </button>
     );
   }
 
   return (
     <button
-      className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-zinc-200 disabled:bg-zinc-600 disabled:text-zinc-300"
+      className="nb-btn bg-ink px-4 py-2 text-sm text-card"
       disabled={!connector || isPending}
       onClick={() => connector && connect({ connector })}
+      title={connector ? undefined : "Install a browser wallet such as MetaMask or Rabby"}
+      type="button"
     >
-      {isPending ? "Connecting..." : "Connect Wallet"}
+      {isPending ? "Connecting…" : "Connect wallet"}
     </button>
   );
 }

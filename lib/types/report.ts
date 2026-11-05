@@ -13,11 +13,20 @@ export type RiskCheckRequest = {
   capOrderId?: string;
 };
 
+export type ReportAnchor = {
+  txHash: `0x${string}`;
+  requester: `0x${string}`;
+  blockNumber: number;
+  anchoredAt: string;
+};
+
 export type RiskReport = {
   reportId: string;
   sellerAgentId: string;
   sellerAgentName: string;
   taskType: TaskType;
+  sampleTask: string;
+  proposedPriceUsdc: number;
   trustScore: number;
   riskLevel: RiskLevel;
   recommendedAction: RecommendedAction;
@@ -31,8 +40,11 @@ export type RiskReport = {
     reputationScore: number;
     taskFitScore: number;
   };
-  capOrderId: string;
+  /** Order reference passed in by the caller (e.g. a CAP order). Never invented. */
+  capOrderId: string | null;
+  /** sha256 over every field above, see lib/web3/report-hash.ts. */
   reportHash: `0x${string}`;
-  baseTransactionHash?: `0x${string}`;
+  /** Set once the hash is verified on the Base Sepolia registry. Not part of the hash. */
+  anchor?: ReportAnchor;
   createdAt: string;
 };

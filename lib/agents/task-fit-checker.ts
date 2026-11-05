@@ -8,6 +8,7 @@ export function runTaskFitChecker(agent: SellerAgent, taskType: TaskType): Check
     checkerName: "TaskFitChecker",
     score,
     riskFlags: score < 50 ? ["task_mismatch"] : [],
+    method: "rules",
     notes: agent.taskTypes.includes(taskType)
       ? [`Seller has history for ${taskType} tasks.`]
       : [`Seller does not clearly specialize in ${taskType} tasks.`],

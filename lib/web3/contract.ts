@@ -1,5 +1,5 @@
 import { isAddress, zeroAddress } from "viem";
-import { baseSepolia } from "wagmi/chains";
+import { baseSepolia } from "viem/chains";
 
 export const agentBondReportRegistryAbi = [
   {
@@ -13,6 +13,24 @@ export const agentBondReportRegistryAbi = [
       { name: "riskLevel", type: "string" },
     ],
     outputs: [],
+  },
+  {
+    type: "function",
+    name: "isRegistered",
+    stateMutability: "view",
+    inputs: [{ name: "reportHash", type: "bytes32" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "records",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "bytes32" }],
+    outputs: [
+      { name: "requester", type: "address" },
+      { name: "registeredAt", type: "uint64" },
+      { name: "trustScore", type: "uint8" },
+    ],
   },
   {
     type: "event",
@@ -37,6 +55,6 @@ export const isRegistryConfigured = reportRegistryAddress !== zeroAddress;
 
 export const registryChain = baseSepolia;
 
-export function explorerTxUrl(txHash: string) {
-  return `${registryChain.blockExplorers.default.url}/tx/${txHash}`;
-}
+const explorer = registryChain.blockExplorers.default.url;
+export const explorerTxUrl = (txHash: string) => `${explorer}/tx/${txHash}`;
+export const explorerAddressUrl = (address: string) => `${explorer}/address/${address}`;

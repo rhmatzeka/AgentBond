@@ -1,220 +1,141 @@
-"use client";
-
 import Link from "next/link";
-import { useState, useTransition } from "react";
-import { ReportResult } from "@/components/report-result";
-import { SellerAgentCard } from "@/components/seller-agent-card";
-import { SiteHeader } from "@/components/site-header";
-import { VerificationTopology } from "@/components/verification-topology";
+import { CheckForm } from "@/components/check-form";
+import { ReportSlip } from "@/components/report-slip";
+import { ReportsTable } from "@/components/reports-table";
+import { ScoreWeights } from "@/components/score-weights";
+import { VerdictBadge } from "@/components/verdict-badge";
 import { demoAgents } from "@/lib/data/demo-agents";
-import type { SellerAgent, TaskType } from "@/lib/types/agent";
-import type { RiskReport } from "@/lib/types/report";
-import { taskTypes } from "@/lib/validation/risk-check";
+import { exampleReport } from "@/lib/data/example-report";
+import { loadRecentReports } from "@/lib/data/recent-reports";
 
-const defaultAgent = demoAgents[0];
-const sampleTask = "Find 5 sources about Base ecosystem growth";
+export const revalidate = 30;
 
-const inputClass =
-  "w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-sm focus:border-brand-green focus:outline-none";
+const requestExample = `curl -X POST https://agentbond.rahmateka.my.id/api/cap/generate-risk-report \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "sellerAgentId": "cheap-spam-bot",
+    "taskType": "research",
+    "proposedPriceUsdc": 0.5,
+    "sampleTask": "Find 5 sources about Base ecosystem growth",
+    "sampleOutput": "Base is good. No sources needed."
+  }'`;
 
-export default function Home() {
-  const [selectedAgent, setSelectedAgent] = useState<SellerAgent>(defaultAgent);
-  const [taskType, setTaskType] = useState<TaskType>(defaultAgent.taskTypes[0]);
-  const [price, setPrice] = useState(String(defaultAgent.defaultPriceUsdc));
-  const [sampleOutput, setSampleOutput] = useState(defaultAgent.sampleOutput);
-  const [report, setReport] = useState<RiskReport | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+const responseExample = `{
+  "reportId": "report_3f9c1a…",
+  "sellerAgentId": "cheap-spam-bot",
+  "trustScore": 28,
+  "riskLevel": "high",
+  "recommendedAction": "avoid",
+  "recommendedMaxPriceUsdc": 2,
+  "reasons": ["The sample brushes off sources, …", "…"],
+  "reportHash": "0x8c2e…"
+}`;
 
-  function selectAgent(agent: SellerAgent) {
-    setSelectedAgent(agent);
-    setTaskType(agent.taskTypes[0]);
-    setPrice(String(agent.defaultPriceUsdc));
-    setSampleOutput(agent.sampleOutput);
-    setReport(null);
-    setError(null);
-  }
+const verdicts = [
+  { action: "hire" as const, range: "70 to 100", text: "Pay up to the benchmark ceiling." },
+  { action: "verify" as const, range: "40 to 69", text: "Pay per milestone or check the delivery first." },
+  { action: "avoid" as const, range: "0 to 39", text: "Walk away, or verify by hand before paying." },
+];
 
-  function runRiskCheck() {
-    const proposedPriceUsdc = Number(price);
-    if (price.trim() === "" || !Number.isFinite(proposedPriceUsdc) || proposedPriceUsdc < 0) {
-      setError("Enter a valid non-negative price");
-      return;
-    }
+const sectionTitle = "text-4xl font-black tracking-[-0.035em] sm:text-5xl";
 
-    setError(null);
-    startTransition(async () => {
-      try {
-        const response = await fetch("/api/risk-check", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            sellerAgentId: selectedAgent.id,
-            taskType,
-            proposedPriceUsdc,
-            sampleTask,
-            sampleOutput,
-          }),
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          setError(payload.error || "Risk check failed");
-          return;
-        }
-        setReport(payload.report);
-      } catch {
-        setError("Failed to connect to scoring server");
-      }
-    });
-  }
+export default async function Home() {
+  const recent = await loadRecentReports(5);
 
   return (
-    <main className="bg-vibe-theme relative flex min-h-screen flex-col justify-between text-white">
-      <div className="absolute left-1/2 top-0 -z-10 h-[400px] w-full max-w-7xl -translate-x-1/2 opacity-25 [background-image:radial-gradient(circle_at_top,#00d4a4_0%,transparent_60%)]" />
-
-      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-between px-6">
-        <SiteHeader />
-
-        <section className="my-auto py-6 text-center md:py-10">
-          <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-brand-green/30 bg-brand-green/10 px-3.5 py-1 font-mono text-xs text-brand-green shadow-[0_0_15px_rgba(0,212,164,0.1)]">
-            <span className="rounded-sm bg-brand-green px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-black">
-              New
-            </span>
-            <span className="text-zinc-300">|</span>
-            <span className="text-zinc-300">Trust layer for paid agent-to-agent transactions</span>
-          </div>
-          <h1 className="mx-auto max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-0.04em] md:text-7xl">
-            Before agents pay each other, they ask AgentBond
+    <main>
+      <section className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-5 pb-20 pt-14 sm:px-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-20 lg:pt-20">
+        <div>
+          <h1 className="max-w-2xl text-balance text-[clamp(3.1rem,7.6vw,6.25rem)] font-black leading-[0.9] tracking-[-0.055em]">
+            A credit check for AI agents
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm font-light leading-relaxed text-zinc-400 md:text-base">
-            Score seller agents on output quality, pricing, reputation, and task fit before a buyer agent spends
-            USDC, then anchor the report hash on Base Sepolia.
+          <p className="mt-7 max-w-lg text-lg leading-relaxed text-graphite">
+            Before your agent pays another agent, AgentBond grades the seller&apos;s work, price, track record and fit
+            for the task. You get a verdict, a fair price ceiling, and a report hash you can anchor on Base.
           </p>
+          <div className="mt-9 flex flex-wrap gap-4">
+            <Link className="nb-btn bg-ink text-card" href="#check">
+              Check a seller
+            </Link>
+            <Link className="nb-btn bg-card" href="#api">
+              Call it from your agent
+            </Link>
+          </div>
+        </div>
 
-          <div className="mx-auto mt-8 max-w-xl">
-            <div className="flex rounded-full border border-white/10 bg-white/[0.03] p-1.5 shadow-2xl backdrop-blur-md">
-              <input
-                aria-label="Selected seller agent"
-                className="flex-1 bg-transparent px-5 py-3 font-mono text-sm text-zinc-300 focus:outline-none"
-                readOnly
-                type="text"
-                value={selectedAgent.id}
-              />
-              <button
-                className="flex items-center gap-2 whitespace-nowrap rounded-full bg-white px-6 py-3 text-sm font-semibold text-black shadow-md transition hover:bg-zinc-200 disabled:opacity-60"
-                disabled={isPending}
-                onClick={runRiskCheck}
-                type="button"
-              >
-                {isPending ? "Analyzing..." : "Verify now"}
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                  <path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+        <figure className="mx-auto w-full max-w-md">
+          <div className="[&>article]:shadow-hard-lg">
+            <ReportSlip compact heading="Example report" report={exampleReport} />
+          </div>
+          <figcaption className="mt-5 text-center text-sm text-graphite">
+            What a seller with a clean record gets back.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section className="scroll-mt-4 border-y-2 border-ink bg-card" id="check">
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+          <h2 className={sectionTitle}>Check a seller</h2>
+          <p className="mt-3 max-w-2xl text-graphite">
+            Pick a seller, describe the job, and paste a sample of their work. The check takes a few seconds.
+          </p>
+          <div className="mt-10">
+            <CheckForm sellers={demoAgents} />
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <h2 className={sectionTitle}>How the score is built</h2>
+        <p className="mt-3 max-w-2xl text-graphite">
+          Four checks run on every request. Their scores are weighted into one trust score out of 100.
+        </p>
+        <div className="mt-10">
+          <ScoreWeights />
+        </div>
+
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
+          {verdicts.map((verdict) => (
+            <div className="nb-card p-5" key={verdict.action}>
+              <VerdictBadge action={verdict.action} />
+              <p className="mt-5 font-mono text-sm font-semibold tabular-nums">Score {verdict.range}</p>
+              <p className="mt-1 text-graphite">{verdict.text}</p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {recent.length > 0 && (
+        <section className="mx-auto max-w-6xl px-5 pb-20 sm:px-8">
+          <div className="flex items-end justify-between gap-4">
+            <h2 className={sectionTitle}>Latest checks</h2>
+            <Link className="font-bold underline decoration-2 underline-offset-4 hover:no-underline" href="/reports">
+              All reports
+            </Link>
+          </div>
+          <div className="mt-8">
+            <ReportsTable reports={recent} />
           </div>
         </section>
+      )}
 
-        <div className="h-8 md:h-12" />
-      </div>
-
-      <section className="mx-auto mt-auto w-full max-w-7xl scroll-mt-6 px-6" id="playground">
-        <div className="overflow-hidden rounded-t-3xl border-x border-t border-white/10 bg-[#061216]/80 shadow-[0_0_100px_rgba(0,0,0,0.8)] backdrop-blur-lg">
-          <div className="flex items-center gap-2 border-b border-white/10 bg-[#08191e]/50 px-6 py-4">
-            <div className="flex h-5 w-5 items-center justify-center rounded-md bg-brand-green font-mono text-[10px] font-bold text-black">
-              ab
-            </div>
-            <span className="font-mono text-sm font-semibold tracking-wider text-white">agentbond playground</span>
+      <section className="scroll-mt-4 border-t-2 border-ink bg-ink text-card" id="api">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[20rem_minmax(0,1fr)]">
+          <div>
+            <h2 className={sectionTitle}>Call it from your agent</h2>
+            <p className="mt-4 leading-relaxed text-card/70">
+              One POST before every payment. The compact response is shaped for CAP services, and the full report stays
+              available at <code className="font-mono text-sm text-card">/api/reports/:id</code>.
+            </p>
+            <p className="mt-4 text-sm text-card/60">Limited to 20 checks per minute per client.</p>
           </div>
-
-          <div className="grid divide-y divide-white/10 lg:grid-cols-[1.1fr_0.9fr] lg:divide-x lg:divide-y-0">
-            <div className="space-y-6 p-6 md:p-8">
-              <div>
-                <h2 className="mb-4 font-mono text-sm uppercase tracking-widest text-zinc-500">Seller agents</h2>
-                <div className="grid gap-3">
-                  {demoAgents.map((agent) => (
-                    <SellerAgentCard
-                      agent={agent}
-                      key={agent.id}
-                      onSelect={selectAgent}
-                      selected={agent.id === selectedAgent.id}
-                    />
-                  ))}
-                </div>
-              </div>
-              <VerificationTopology />
-            </div>
-
-            <div className="space-y-6 p-6 md:p-8">
-              <h2 className="font-mono text-xs uppercase tracking-widest text-zinc-500">Verification request</h2>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <label className="grid gap-2">
-                    <span className="font-mono text-xs text-zinc-400">Task type</span>
-                    <select
-                      className={inputClass}
-                      onChange={(event) => setTaskType(event.target.value as TaskType)}
-                      value={taskType}
-                    >
-                      {taskTypes.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                          {selectedAgent.taskTypes.includes(type) ? "" : " (not a specialty)"}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="grid gap-2">
-                    <span className="font-mono text-xs text-zinc-400">Proposed price (USDC)</span>
-                    <input
-                      className={inputClass}
-                      min={0}
-                      onChange={(event) => setPrice(event.target.value)}
-                      step="0.1"
-                      type="number"
-                      value={price}
-                    />
-                  </label>
-                </div>
-
-                <label className="grid gap-2">
-                  <span className="font-mono text-xs text-zinc-400">Sample output to verify</span>
-                  <textarea
-                    className={`${inputClass} leading-normal`}
-                    onChange={(event) => setSampleOutput(event.target.value)}
-                    rows={3}
-                    value={sampleOutput}
-                  />
-                </label>
-
-                <button
-                  className="w-full rounded-full bg-brand-green py-3.5 text-sm font-semibold text-black shadow-[0_4px_20px_rgba(0,212,164,0.2)] transition hover:bg-brand-green-deep disabled:bg-zinc-700 disabled:text-zinc-400"
-                  disabled={isPending}
-                  onClick={runRiskCheck}
-                  type="button"
-                >
-                  {isPending ? "Evaluating..." : "Run AgentBond verification"}
-                </button>
-                {error && (
-                  <p className="font-mono text-xs text-red-500" role="alert">
-                    {error}
-                  </p>
-                )}
-              </div>
-
-              {report && (
-                <div className="space-y-2">
-                  <ReportResult report={report} />
-                  <Link
-                    className="block text-right font-mono text-[11px] text-zinc-500 transition hover:text-white"
-                    href={`/reports/${report.reportId}`}
-                  >
-                    Open shareable report →
-                  </Link>
-                </div>
-              )}
-            </div>
+          <div className="min-w-0 space-y-6">
+            <pre className="overflow-x-auto border-2 border-card p-5 font-mono text-[13px] leading-relaxed shadow-[6px_6px_0_0_#fff]">
+              {requestExample}
+            </pre>
+            <pre className="overflow-x-auto border-2 border-card bg-card p-5 font-mono text-[13px] leading-relaxed text-ink">
+              {responseExample}
+            </pre>
           </div>
         </div>
       </section>

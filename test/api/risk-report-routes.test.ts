@@ -66,3 +66,21 @@ describe("risk report API routes", () => {
     expect(response.status).toBe(404);
   });
 });
+
+describe("report anchoring and listing", () => {
+  it("lists reports newest first and honours the limit", async () => {
+    const { GET: listReports } = await import("@/app/api/reports/route");
+    await riskCheckPost(jsonRequest(validBody));
+    await riskCheckPost(jsonRequest(validBody));
+    const response = await listReports(new Request("http://localhost/api/reports?limit=1"));
+    expect((await response.json()).reports).toHaveLength(1);
+  });
+
+  it("rejects anchoring without a deployed registry", async () => {
+    const { POST: anchorPost } = await import("@/app/api/reports/[reportId]/anchor/route");
+    const response = await anchorPost(jsonRequest({ txHash: `0x${"a".repeat(64)}` }), {
+      params: Promise.resolve({ reportId: "anything" }),
+    });
+    expect(response.status).toBe(503);
+  });
+});

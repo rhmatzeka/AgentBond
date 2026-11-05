@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculatePricingScore } from "@/lib/scoring/pricing-score";
+import { calculatePricingScore, calculateRecommendedMaxPrice } from "@/lib/scoring/pricing-score";
 
 describe("pricing score", () => {
   it("gives high score for price inside benchmark", () => {
@@ -12,5 +12,14 @@ describe("pricing score", () => {
 
   it("flags suspiciously cheap price when quality is low", () => {
     expect(calculatePricingScore({ taskType: "research", proposedPriceUsdc: 0.5, outputQualityScore: 30 })).toBe(30);
+  });
+});
+
+describe("recommended max price", () => {
+  it("tightens the ceiling as risk rises", () => {
+    expect(calculateRecommendedMaxPrice("code_review", "low")).toBe(5);
+    expect(calculateRecommendedMaxPrice("code_review", "medium")).toBe(4);
+    expect(calculateRecommendedMaxPrice("code_review", "high")).toBe(3);
+    expect(calculateRecommendedMaxPrice("summary", "medium")).toBe(0.75);
   });
 });

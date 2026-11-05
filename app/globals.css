@@ -1,51 +1,127 @@
 @import "tailwindcss";
+
 @theme {
-  --color-brand-green: #00d4a4;
-  --color-brand-green-deep: #00b48a;
-  --color-canvas-dark: #01090d;
-  --color-surface-code: #0b1519;
-  --color-hairline-dark: #12252c;
-  --font-sans: var(--font-geist-sans), Inter, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --color-paper: #ebebe7;
+  --color-card: #ffffff;
+  --color-ink: #000000;
+  --color-graphite: #4a4a47;
+  --color-ash: #8b8b86;
+  --color-mist: #d9d9d4;
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --shadow-hard-sm: 3px 3px 0 0 #000;
+  --shadow-hard: 6px 6px 0 0 #000;
+  --shadow-hard-lg: 10px 10px 0 0 #000;
 }
 
-:root {
-  --background: #01090d;
-  --foreground: #ffffff;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: #01090d;
-  color: #ffffff;
+  background: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
-  overflow-x: hidden;
 }
 
 ::selection {
-  background: #00d4a4;
-  color: #0a0a0a;
+  background: #000;
+  color: #fff;
 }
 
-/* Single combined background matching Vibedesign exactly (Teal glow + Subtle stars grid) */
-.bg-vibe-theme {
-  background: 
-    /* Top layer: Subtle star/dot pattern grid */
-    radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) repeat,
-    /* Bottom layer: Rich cyan-teal radial glow centered at the top-middle */
-    radial-gradient(circle at 50% 0px, #0b4352 0%, #031720 50%, #01090d 100%);
-  background-size: 36px 36px, auto;
-  background-attachment: scroll, scroll;
+:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 3px;
 }
 
-.bg-panel-glow {
-  background: linear-gradient(180deg, rgba(11, 67, 82, 0.25) 0%, rgba(3, 23, 32, 0.4) 100%);
-  border: 1px solid rgba(0, 212, 164, 0.15);
+/* A card with a black frame and a hard, unblurred shadow. */
+@utility nb-card {
+  background: var(--color-card);
+  border: 2px solid #000;
+  box-shadow: var(--shadow-hard);
 }
 
-.glow-hover {
-  transition: all 0.3s ease;
+/* Buttons sink into their shadow when pressed. */
+@utility nb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid #000;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-hard-sm);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+  &:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 0 #000;
+  }
+  &:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 #000;
+  }
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.45;
+  }
 }
-.glow-hover:hover {
-  box-shadow: 0 0 30px rgba(0, 212, 164, 0.2);
-  border-color: rgba(0, 212, 164, 0.5);
+
+@utility nb-field {
+  width: 100%;
+  border: 2px solid #000;
+  background: #fff;
+  padding: 0.7rem 0.9rem;
+  font-size: 15px;
+  color: #000;
+  transition: box-shadow 120ms ease;
+  &::placeholder {
+    color: var(--color-ash);
+  }
+  &:focus {
+    outline: none;
+    box-shadow: var(--shadow-hard-sm);
+  }
+}
+
+/* Monochrome stand-in for "caution": diagonal hatching. */
+@utility hatch {
+  background-image: repeating-linear-gradient(-45deg, #000 0 2px, transparent 2px 7px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .verdict-land {
+    animation: verdict-land 420ms cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  }
+}
+
+@keyframes verdict-land {
+  from {
+    opacity: 0;
+    transform: translate(-8px, -8px);
+    box-shadow: 10px 10px 0 0 #000;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    box-shadow: 3px 3px 0 0 #000;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .nb-btn,
+  .nb-field {
+    transition: none;
+  }
+}
+
+/* Monochrome stand-in for "weak": a sparse dot grid. */
+@utility dots {
+  background-image: radial-gradient(#000 1.2px, transparent 1.4px);
+  background-size: 6px 6px;
 }

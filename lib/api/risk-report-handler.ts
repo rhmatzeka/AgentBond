@@ -1,13 +1,20 @@
 import { generateRiskReport, UnknownSellerAgentError } from "@/lib/agents/agentbond-orchestrator";
-import { saveReport } from "@/lib/data/reports-store";
+import { getReportStore } from "@/lib/data/reports-store";
 import type { RiskReport } from "@/lib/types/report";
 import { parseRiskCheckRequest, ValidationError } from "@/lib/validation/risk-check";
+import { clientKey, createRateLimiter, tooManyRequests } from "./rate-limit";
+
+// Each check may call the LLM, so cap how often one client can run them.
+const limitRiskChecks = createRateLimiter({ limit: 20, windowMs: 60_000 });
 
 /**
- * Shared POST handler for the dashboard and CAP endpoints: parse and validate the
- * body, score the seller, persist the report, then shape the response.
+ * Shared POST handler for the dashboard and CAP endpoints: rate limit, parse and
+ * validate the body, score the seller, persist the report, then shape the response.
  */
 export async function handleRiskReportRequest<T>(request: Request, toResponse: (report: RiskReport) => T) {
+  const limit = limitRiskChecks(clientKey(request));
+  if (!limit.ok) return tooManyRequests(limit.retryAfterSeconds);
+
   let body: unknown;
   try {
     body = await request.json();
@@ -16,7 +23,8 @@ export async function handleRiskReportRequest<T>(request: Request, toResponse: (
   }
 
   try {
-    const report = saveReport(generateRiskReport(parseRiskCheckRequest(body)));
+    const report = await generateRiskReport(parseRiskCheckRequest(body));
+    await getReportStore().save(report);
     return Response.json(toResponse(report));
   } catch (error) {
     if (error instanceof ValidationError) {
