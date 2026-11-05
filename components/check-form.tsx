@@ -28,8 +28,8 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
   // Every new report feeds out of the printer.
   useGSAP(
     () => {
-      const slip = resultRef.current?.querySelector<HTMLElement>('[data-anim="print"]');
-      if (slip && motionEnabled()) printSlip(slip, { onScroll: false });
+      const slot = resultRef.current?.querySelector<HTMLElement>('[data-anim="print"]');
+      if (slot && motionEnabled()) printSlip(slot);
     },
     { dependencies: [report?.reportId], revertOnUpdate: true },
   );

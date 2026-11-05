@@ -20,8 +20,12 @@ export function Motion() {
       (window as Window & { __motion?: boolean }).__motion = true;
       if (!motionEnabled() || !contextSafe) return;
       // Measure words and lines with the real web font, not the fallback.
-      const run = contextSafe(() => animateAll(document));
+      let stop: (() => void) | undefined;
+      const run = contextSafe(() => {
+        stop = animateAll(document, contextSafe);
+      });
       document.fonts.ready.then(run);
+      return () => stop?.();
     },
     { dependencies: [pathname], revertOnUpdate: true },
   );

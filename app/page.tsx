@@ -136,9 +136,9 @@ function CheckIcon() {
   );
 }
 
-function CodeCard({ title, anim, children }: { title: string; anim: "slap" | "print"; children: string }) {
+function CodeCard({ title, children }: { title: string; children: string }) {
   return (
-    <div className={`${card} overflow-hidden`} data-anim={anim}>
+    <div className={`${card} overflow-hidden`} data-anim="slap">
       <p className="border-b border-line px-5 py-3 text-base text-graphite sm:px-6">{title}</p>
       <pre className="overflow-x-auto whitespace-pre-wrap p-5 font-mono text-[12px] leading-relaxed [overflow-wrap:anywhere] sm:whitespace-pre sm:p-6 sm:text-[13px] sm:[overflow-wrap:normal]">
         {children}
@@ -229,7 +229,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="relative lg:-mt-24">
-            <div className="mx-auto max-w-[24rem] rounded-3xl shadow-[8px_8px_0_0_#000] lg:mr-0" data-shadow>
+            <div className="mx-auto max-w-[24rem] rounded-3xl shadow-[8px_8px_0_0_#000] lg:mr-0">
               <ReportSlip compact heading="Example report" report={exampleReport} />
             </div>
             <span className="absolute -left-4 top-24 hidden w-28 -rotate-12 lg:block" data-anim="pop" data-delay="1.3">
@@ -311,7 +311,8 @@ export default async function Home() {
             </ul>
             <div
               className="light overflow-hidden rounded-2xl border border-black bg-white p-4 font-mono text-[11px] sm:p-5 sm:text-[12px] leading-relaxed text-black shadow-[6px_6px_0_0_#000]"
-              data-anim="print"
+              data-anim="slap"
+              data-delay="0.35"
             >
               <p className="mb-3 flex gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-coral" />
@@ -545,12 +546,8 @@ export default async function Home() {
             </p>
           </div>
           <div className="min-w-0 space-y-5 sm:space-y-6">
-            <CodeCard anim="slap" title="Request">
-              {requestExample}
-            </CodeCard>
-            <CodeCard anim="print" title="Response">
-              {responseExample}
-            </CodeCard>
+            <CodeCard title="Request">{requestExample}</CodeCard>
+            <CodeCard title="Response">{responseExample}</CodeCard>
           </div>
         </div>
       </section>

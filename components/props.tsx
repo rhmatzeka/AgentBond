@@ -37,10 +37,7 @@ export function PriceTag({ text, className = "" }: { text: string; className?: s
 export function BenchmarkChart({ ranges }: { ranges: { label: string; min: number; max: number }[] }) {
   const axis = 5;
   return (
-    <div
-      className="light w-full max-w-[22rem] rounded-2xl border border-black bg-white text-black shadow-[6px_6px_0_0_#000]"
-      data-shadow
-    >
+    <div className="light w-full max-w-[22rem] rounded-2xl border border-black bg-white text-black shadow-[6px_6px_0_0_#000]">
       <p className="border-b border-black px-5 py-3 text-[15px]">Market range per task, in USDC</p>
       <ul className="space-y-3.5 px-5 py-5">
         {ranges.map((range) => (
