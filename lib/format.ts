@@ -5,6 +5,18 @@ export const shortHex = (value: string, head = 6, tail = 4) =>
 
 export const formatUsdc = (value: number) => `${value.toLocaleString("en-US", { maximumFractionDigits: 2 })} USDC`;
 
+/** Background tone per verdict: mint to hire, butter to verify, coral to avoid. */
+export const verdictTone: Record<RecommendedAction, string> = {
+  hire: "bg-mint",
+  verify: "bg-butter",
+  avoid: "bg-coral",
+};
+
+/** Same tones keyed by score band, for bars and numbers. */
+export function scoreTone(score: number) {
+  return score >= 70 ? "bg-mint" : score >= 40 ? "bg-butter" : "bg-coral";
+}
+
 export const verdictLabel: Record<RecommendedAction, string> = {
   hire: "Hire",
   verify: "Verify first",

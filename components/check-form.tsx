@@ -73,16 +73,16 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
-      <form className="space-y-8" onSubmit={runCheck}>
+      <form className="nb-card space-y-7 p-5 sm:p-7" onSubmit={runCheck}>
         <fieldset>
-          <legend className="text-lg font-extrabold">Who is selling?</legend>
+          <legend className="display text-xl">Who is selling?</legend>
           <p className="mt-1 text-sm text-graphite">Four demo sellers with very different track records.</p>
-          <div className="nb-card mt-4 divide-y-2 divide-ink">
+          <div className="mt-4 grid gap-3">
             {sellers.map((item) => {
               const total = item.completedJobs + item.failedJobs;
               return (
                 <label
-                  className="group flex cursor-pointer items-start gap-3.5 px-4 py-3.5 transition-colors hover:bg-paper has-[:checked]:bg-ink has-[:checked]:text-card"
+                  className="group flex cursor-pointer items-start gap-3.5 rounded-[10px] border-2 border-ink bg-card px-4 py-3.5 transition-[background-color,box-shadow,transform] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-hard-sm has-[:checked]:translate-x-0 has-[:checked]:translate-y-0 has-[:checked]:bg-lilac has-[:checked]:shadow-none"
                   key={item.id}
                 >
                   <input
@@ -95,9 +95,9 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
                   />
                   <span
                     aria-hidden
-                    className="mt-1 grid h-4 w-4 shrink-0 place-items-center border-2 border-current peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
+                    className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 border-current peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
                   >
-                    <span className="hidden h-2 w-2 bg-current group-has-[:checked]:block" />
+                    <span className="hidden h-2 w-2 rounded-full bg-current group-has-[:checked]:block" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-3">
@@ -168,11 +168,11 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
         </label>
 
         <div className="flex flex-wrap items-center gap-4">
-          <button className="nb-btn bg-ink px-6 text-card" disabled={isPending} type="submit">
+          <button className="nb-btn w-full bg-lilac px-6 py-3.5 sm:w-auto" disabled={isPending} type="submit">
             {isPending ? "Checking the seller…" : "Run credit check"}
           </button>
           {error && (
-            <p className="border-l-4 border-ink pl-2 text-sm font-semibold" role="alert">
+            <p className="rounded-lg border-2 border-ink bg-paper px-3 py-2 text-sm font-semibold" role="alert">
               {error}
             </p>
           )}
@@ -193,15 +193,30 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
             </Link>
           </div>
         ) : (
-          <div className="grid min-h-56 place-items-center border-2 border-dashed border-ink px-8 text-center lg:min-h-[30rem]">
-            <div>
-              <p className="font-extrabold">{isPending ? "Grading the sample…" : "No report yet"}</p>
-              <p className="mt-1 text-sm text-graphite">
-                {isPending
-                  ? "Quality, price, reputation and task fit are being scored."
-                  : "Pick a seller and run a check. The report prints here."}
-              </p>
+          <div className="rounded-[14px] border-[3px] border-dashed border-ink bg-card/60 p-6 sm:p-7">
+            <div aria-hidden className={`space-y-5 ${isPending ? "animate-pulse" : ""}`}>
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="h-6 w-44 rounded-md bg-mist" />
+                  <div className="h-3.5 w-24 rounded bg-mist" />
+                </div>
+                <div className="h-9 w-20 rounded-[10px] border-[3px] border-dashed border-ash" />
+              </div>
+              <div className="display text-[5.75rem] leading-[0.8] text-mist">00</div>
+              <div className="h-6 rounded-full border-2 border-dashed border-ash" />
+              {[0, 1, 2, 3].map((row) => (
+                <div className="space-y-2" key={row}>
+                  <div className="h-3.5 w-28 rounded bg-mist" />
+                  <div className="h-3.5 rounded-full bg-mist" />
+                </div>
+              ))}
             </div>
+            <p className="mt-7 font-extrabold">{isPending ? "Grading the sample…" : "No report yet"}</p>
+            <p className="mt-1 text-sm text-graphite">
+              {isPending
+                ? "Quality, price, reputation and task fit are being scored."
+                : "Pick a seller and run a check. The report prints here."}
+            </p>
           </div>
         )}
       </div>

@@ -10,17 +10,17 @@ export default async function ReportsPage() {
   const reports = await loadRecentReports(50);
 
   return (
-    <main className="mx-auto max-w-6xl px-5 pb-24 pt-10 sm:px-8">
-      <h1 className="text-4xl font-black tracking-[-0.04em] sm:text-5xl">Reports</h1>
-      <p className="mt-2 max-w-2xl text-graphite">The 50 most recent credit checks, newest first.</p>
-      <div className="mt-8">
+    <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
+      <h1 className="display text-[clamp(2.2rem,4.6vw,3.6rem)]">Reports</h1>
+      <p className="mt-4 max-w-2xl text-lg text-graphite">The 50 most recent credit checks, newest first.</p>
+      <div className="mt-10">
         {reports.length > 0 ? (
           <ReportsTable reports={reports} />
         ) : (
-          <div className="border-2 border-dashed border-ink bg-card px-8 py-14 text-center">
+          <div className="rounded-[14px] border-[3px] border-dashed border-ink bg-card px-8 py-14 text-center">
             <p className="font-semibold">No checks yet</p>
             <p className="mt-1 text-sm text-graphite">Run the first one and it shows up here.</p>
-            <Link className="mt-5 nb-btn bg-ink text-card" href="/#check">
+            <Link className="mt-5 nb-btn bg-lilac" href="/#check">
               Check a seller
             </Link>
           </div>

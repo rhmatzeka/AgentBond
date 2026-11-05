@@ -132,7 +132,10 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
         {action.label}
       </button>
       {error && (
-        <p className="mt-2 border-l-4 border-ink pl-2 text-sm font-semibold text-ink" role="alert">
+        <p
+          className="mt-2 rounded-lg border-2 border-ink bg-card px-3 py-2 text-sm font-semibold text-ink"
+          role="alert"
+        >
           {error}
         </p>
       )}

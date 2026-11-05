@@ -29,29 +29,29 @@ export default async function ReportPage({ params }: Props) {
   const created = new Date(report.createdAt);
 
   return (
-    <main className="mx-auto max-w-6xl px-5 pb-24 pt-10 sm:px-8">
-      <Link className="text-sm font-bold underline decoration-2 underline-offset-4 hover:no-underline" href="/reports">
+    <main className="mx-auto max-w-7xl px-5 pb-24 pt-12 sm:px-8">
+      <Link className="nb-btn bg-card px-3 py-1.5 text-sm" href="/reports">
         All reports
       </Link>
-      <h1 className="mt-4 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
+      <h1 className="display mt-8 break-words text-[clamp(1.9rem,4.6vw,3.6rem)]">
         Risk report for {report.sellerAgentName}
       </h1>
-      <p className="mt-2 text-graphite">
+      <p className="mt-3 text-lg text-graphite">
         Checked on{" "}
         <time dateTime={report.createdAt}>
           {created.toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "UTC" })} UTC
         </time>
       </p>
 
-      <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)]">
+      <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:gap-12">
         <ReportSlip report={report}>
           <AnchorPanel report={report} />
         </ReportSlip>
 
-        <div className="space-y-10">
-          <section>
-            <h2 className="text-xl font-extrabold">What was checked</h2>
-            <p className="mt-2 leading-relaxed text-graphite">
+        <div className="space-y-6">
+          <section className="nb-card p-6">
+            <h2 className="display text-xl">What was checked</h2>
+            <p className="mt-3 text-lg leading-relaxed">
               {report.sampleTask ? (
                 <>&ldquo;{report.sampleTask}&rdquo;</>
               ) : (
@@ -60,20 +60,21 @@ export default async function ReportPage({ params }: Props) {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-xl font-extrabold">Why this verdict</h2>
-            <ul className="mt-3 space-y-2.5">
+          <section className="nb-card p-6">
+            <h2 className="display text-xl">Why this verdict</h2>
+            <ul className="mt-4 space-y-3">
               {report.reasons.map((reason) => (
-                <li className="border-l-4 border-ink pl-4 leading-relaxed text-graphite" key={reason}>
+                <li className="flex gap-3 leading-relaxed text-graphite" key={reason}>
+                  <span aria-hidden className="mt-1.5 h-3 w-3 shrink-0 rotate-45 border-2 border-ink bg-lilac" />
                   {reason}
                 </li>
               ))}
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-xl font-extrabold">Integrity</h2>
-            <p className="mt-2 font-bold">
+          <section className={`nb-card p-6 ${intact ? "bg-mint" : "bg-coral"}`}>
+            <h2 className="display text-xl">Integrity</h2>
+            <p className="mt-3 font-bold">
               {intact ? "The stored report matches its hash." : "The stored report does not match its hash."}
             </p>
             <p className="mt-1 text-sm leading-relaxed text-graphite">

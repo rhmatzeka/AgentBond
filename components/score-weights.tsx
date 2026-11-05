@@ -1,32 +1,36 @@
 import { checkerLabel } from "@/lib/format";
 
 const order = ["OutputQualityChecker", "ReputationChecker", "PricingBenchmarkChecker", "TaskFitChecker"];
-const fills = ["bg-ink", "hatch", "dots", "bg-card"];
+const fills = ["bg-lilac", "hatch bg-mint", "dots bg-butter", "bg-coral"];
 
-/** The four checks drawn to scale by their share of the trust score. */
+/** The four checks drawn to scale by their share of the trust score, then one card each. */
 export function ScoreWeights() {
   return (
-    <div>
-      <div aria-hidden className="flex h-14 border-2 border-ink shadow-hard">
+    <div className="space-y-6">
+      <div aria-hidden className="flex h-16 overflow-hidden rounded-[14px] border-[3px] border-ink bg-card shadow-hard">
         {order.map((key, index) => (
           <div
-            className={`${fills[index]} flex items-end border-ink p-2 [&:not(:last-child)]:border-r-2`}
+            className={`${fills[index]} flex items-end border-ink p-2 [&:not(:last-child)]:border-r-[3px]`}
             key={key}
             style={{ width: `${checkerLabel[key].weight}%` }}
           >
-            <span className="bg-card px-1 font-mono text-xs font-semibold">{checkerLabel[key].weight}%</span>
+            <span className="rounded-md border-2 border-ink bg-card px-1.5 font-mono text-xs font-semibold">
+              {checkerLabel[key].weight}%
+            </span>
           </div>
         ))}
       </div>
-      <dl className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {order.map((key, index) => (
-          <div key={key}>
-            <dt className="flex items-center gap-2.5 font-extrabold">
-              <span aria-hidden className={`h-4 w-4 border-2 border-ink ${fills[index]}`} />
-              {checkerLabel[key].name}
-              <span className="font-mono text-sm font-normal text-graphite">{checkerLabel[key].weight}%</span>
-            </dt>
-            <dd className="mt-1.5 text-sm text-graphite">{checkerLabel[key].asks}</dd>
+          <div className="nb-card overflow-hidden" key={key}>
+            <div aria-hidden className={`h-12 border-b-[3px] border-ink ${fills[index]}`} />
+            <div className="p-5">
+              <dt>
+                <span className="display block text-4xl tabular-nums">{checkerLabel[key].weight}%</span>
+                <span className="mt-2 block text-lg font-extrabold">{checkerLabel[key].name}</span>
+              </dt>
+              <dd className="mt-1 text-sm leading-relaxed text-graphite">{checkerLabel[key].asks}</dd>
+            </div>
           </div>
         ))}
       </dl>
