@@ -28,7 +28,7 @@ export default function DemoPage() {
           ] as const;
           return (
             <article className="nb-card flex flex-col overflow-hidden" key={agent.id}>
-              <div aria-hidden className={`h-4 border-b border-ink ${scoreTone(reputation)}`} />
+              <div aria-hidden className={`h-4 border-b border-line ${scoreTone(reputation)}`} />
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex-1">
                   <h2 className="display text-3xl">{agent.name}</h2>
@@ -41,11 +41,11 @@ export default function DemoPage() {
                     )}
                   </p>
                 </div>
-                <dl className="mt-6 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-ink pt-5 sm:grid-cols-5">
+                <dl className="mt-6 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-line pt-5 sm:grid-cols-5">
                   {stats.map(([label, value]) => (
                     <div key={label}>
-                      <dt className="text-xs text-graphite">{label}</dt>
-                      <dd className="display mt-1 whitespace-nowrap text-xl tabular-nums">{value}</dd>
+                      <dt className="text-sm text-graphite">{label}</dt>
+                      <dd className="display mt-1 whitespace-nowrap text-2xl tabular-nums">{value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -55,7 +55,7 @@ export default function DemoPage() {
         })}
       </div>
 
-      <Link className="mt-12 nb-btn bg-ink text-card" href="/#check">
+      <Link className="mt-12 nb-btn nb-btn-primary" href="/#check">
         Check one of them
       </Link>
     </main>

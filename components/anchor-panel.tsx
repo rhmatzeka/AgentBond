@@ -35,7 +35,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
 
   if (anchor) {
     return (
-      <div className="mt-3 border-t border-ink pt-3 text-sm">
+      <div className="mt-3 border-t border-line pt-3 text-sm">
         <p className="font-medium text-ink">Anchored on {registryChain.name}</p>
         <p className="mt-1">
           Block {anchor.blockNumber.toLocaleString("en-US")}, registered by{" "}
@@ -55,7 +55,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
 
   if (!isRegistryConfigured) {
     return (
-      <p className="mt-3 border-t border-ink pt-3 text-sm">
+      <p className="mt-3 border-t border-line pt-3 text-sm">
         On-chain anchoring turns on once the registry contract is deployed.
       </p>
     );
@@ -118,7 +118,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
   }
 
   return (
-    <div className="mt-3 border-t border-ink pt-3">
+    <div className="mt-3 border-t border-line pt-3">
       <p className="text-sm">
         Anchoring writes this hash to the AgentBond registry on {registryChain.name}, so anyone can prove the report
         existed and was not edited later.
@@ -132,7 +132,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
         {action.label}
       </button>
       {error && (
-        <p className="mt-2 rounded-xl border border-ink bg-coral px-3 py-2 text-sm font-semibold text-ink" role="alert">
+        <p className="mt-2 rounded-xl border border-black bg-coral px-3 py-2 text-sm text-black" role="alert">
           {error}
         </p>
       )}

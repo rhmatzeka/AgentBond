@@ -26,11 +26,11 @@ export function ReportSlip({
   return (
     <article
       aria-label={`${heading} for ${report.sellerAgentName}`}
-      className="overflow-hidden rounded-3xl border border-ink bg-card"
+      className="light overflow-hidden rounded-3xl border border-line bg-card"
     >
-      <header className="flex items-center justify-between gap-4 border-b border-ink px-6 py-3.5">
+      <header className="flex items-center justify-between gap-4 border-b border-line px-6 py-3.5">
         <p className="text-[15px] font-medium">{heading}</p>
-        <p className="rounded-full border border-ink px-3 py-0.5 text-[13px]">{report.taskType.replace("_", " ")}</p>
+        <p className="rounded-full border border-line px-3 py-0.5 text-[13px]">{report.taskType.replace("_", " ")}</p>
       </header>
 
       <div className="px-6 pb-7 pt-6">
@@ -54,7 +54,9 @@ export function ReportSlip({
           <ScoreBar score={report.trustScore} size="lg" />
         </div>
 
-        <div className={`mt-6 rounded-2xl border border-ink px-5 py-4 ${verdictTone[report.recommendedAction]}`}>
+        <div
+          className={`mt-6 rounded-2xl border border-line px-5 py-4 text-black ${verdictTone[report.recommendedAction]}`}
+        >
           {report.recommendedAction === "avoid" ? (
             <>
               <p className="text-lg font-medium">Do not pay up front</p>
@@ -91,7 +93,7 @@ export function ReportSlip({
                   <dd>
                     <ul className="mt-2.5 flex flex-wrap gap-1.5">
                       {result.riskFlags.map((flag) => (
-                        <li className="rounded-full border border-ink px-2.5 py-0.5 text-[13px]" key={flag}>
+                        <li className="rounded-full border border-line px-2.5 py-0.5 text-[13px]" key={flag}>
                           {flag.replaceAll("_", " ")}
                         </li>
                       ))}
@@ -105,7 +107,7 @@ export function ReportSlip({
       </div>
 
       {!compact && (
-        <footer className="space-y-2 border-t border-ink bg-paper px-6 py-5 text-[15px] text-graphite">
+        <footer className="space-y-2 border-t border-line bg-paper px-6 py-5 text-[15px] text-graphite">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
             Report hash
             <code className="font-mono text-[13px] text-ink" title={report.reportHash}>

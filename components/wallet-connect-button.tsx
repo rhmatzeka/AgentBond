@@ -3,7 +3,7 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { shortHex } from "@/lib/format";
 
-const cell = "flex items-center border-l border-ink px-5 text-[17px] transition-colors sm:px-7";
+const cell = "flex items-center border-l border-line px-5 text-lg transition-colors sm:px-8";
 
 export function WalletConnectButton() {
   const { address, isConnected } = useAccount();
@@ -14,7 +14,7 @@ export function WalletConnectButton() {
   if (isConnected && address) {
     return (
       <button
-        className={`${cell} bg-card font-mono text-sm hover:bg-paper`}
+        className={`${cell} font-mono text-[15px] hover:bg-card`}
         onClick={() => disconnect()}
         title="Disconnect wallet"
         type="button"
@@ -26,7 +26,7 @@ export function WalletConnectButton() {
 
   return (
     <button
-      className={`${cell} bg-ink text-card hover:bg-lilac hover:text-ink disabled:opacity-60`}
+      className={`${cell} bg-pink text-black hover:bg-ink disabled:opacity-60`}
       disabled={!connector || isPending}
       onClick={() => connector && connect({ connector })}
       title={connector ? undefined : "Install a browser wallet such as MetaMask or Rabby"}

@@ -17,10 +17,10 @@ export default async function ReportsPage() {
         {reports.length > 0 ? (
           <ReportsTable reports={reports} />
         ) : (
-          <div className="rounded-3xl border border-dashed border-ink bg-card px-8 py-14 text-center">
+          <div className="rounded-3xl border border-dashed border-line bg-card px-8 py-14 text-center">
             <p className="font-medium">No checks yet</p>
             <p className="mt-1 text-sm text-graphite">Run the first one and it shows up here.</p>
-            <Link className="mt-5 nb-btn bg-ink text-card" href="/#check">
+            <Link className="mt-5 nb-btn nb-btn-primary" href="/#check">
               Check a seller
             </Link>
           </div>

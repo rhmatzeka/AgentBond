@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
+import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
-const instrument = Instrument_Sans({ variable: "--font-instrument", subsets: ["latin"] });
+const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"] });
 const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://agentbond.rahmateka.my.id";
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html className={`${instrument.variable} ${plexMono.variable} antialiased`} lang="en">
+    <html className={`${dmSans.variable} ${plexMono.variable} antialiased`} lang="en">
       <body className="flex min-h-dvh flex-col">
         <Providers>
           <SiteHeader />

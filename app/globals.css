@@ -1,25 +1,41 @@
 @import "tailwindcss";
 
+/*
+ * Dark by default, after Gumroad's dark theme: black page, charcoal panels with thin grey
+ * lines, white type, pink actions, yellow and teal for illustration. Wrap anything in
+ * `.light` (the report slip) to flip it to a white card with black lines.
+ */
 @theme {
+  --color-paper: #000000;
+  --color-card: #242423;
+  --color-ink: #ffffff;
+  --color-line: #4f4f4c;
+  --color-graphite: #b9b9b3;
+  --color-ash: #85857f;
+  --color-mist: #3a3a37;
+  --color-pink: #ff90e8;
+  --color-yellow: #ffc900;
+  --color-teal: #23a094;
+  --color-coral: #ff7051;
+  --color-sky: #90a8ed;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+.light {
   --color-paper: #f4f4f0;
   --color-card: #ffffff;
   --color-ink: #000000;
+  --color-line: #000000;
   --color-graphite: #4b4b47;
   --color-ash: #8a8a84;
   --color-mist: #e4e4de;
-  --color-lilac: #b49cff;
-  --color-mint: #7fdbb0;
-  --color-sun: #ffd23f;
-  --color-coral: #ff8a6b;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
-  --shadow-hard-sm: 4px 4px 0 0 #000;
-  --shadow-hard: 6px 6px 0 0 #000;
-  --shadow-hard-lg: 8px 8px 0 0 #000;
+  color: var(--color-ink);
 }
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
@@ -29,46 +45,45 @@ body {
 }
 
 ::selection {
-  background: var(--color-lilac);
+  background: var(--color-pink);
   color: #000;
 }
 
 :focus-visible {
-  outline: 2px solid #000;
+  outline: 2px solid var(--color-pink);
   outline-offset: 3px;
 }
 
-/* Big, light headings: size does the work, not weight. */
+/* Big, regular-weight headings: size does the work, not weight. */
 @utility display {
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
-/* White card with a thin black line and generous corners. */
+/* Charcoal panel with a thin line and generous corners. */
 @utility nb-card {
   background: var(--color-card);
-  border: 1px solid #000;
+  border: 1px solid var(--color-line);
   border-radius: 1.5rem;
 }
 
-/* Square button that lifts off its hard shadow on hover. */
+/* Square button that lifts off a hard shadow on hover. */
 @utility nb-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border: 1px solid #000;
-  padding: 0.85rem 1.5rem;
-  font-size: 1.0625rem;
-  font-weight: 500;
+  border: 1px solid var(--color-line);
+  padding: 0.85rem 1.75rem;
+  font-size: 1.125rem;
   transition:
     transform 140ms ease,
     box-shadow 140ms ease,
     background-color 140ms ease;
   &:hover {
     transform: translate(-4px, -4px);
-    box-shadow: var(--shadow-hard-sm);
+    box-shadow: 4px 4px 0 0 var(--color-ink);
   }
   &:active {
     transform: none;
@@ -80,20 +95,28 @@ body {
   }
 }
 
+/* The pink call to action. */
+@utility nb-btn-primary {
+  border-color: var(--color-pink);
+  background: var(--color-pink);
+  color: #000;
+}
+
 @utility nb-field {
   width: 100%;
-  border: 1px solid #000;
-  background: #fff;
-  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  padding: 0.85rem 1rem;
   font-size: 1rem;
-  color: #000;
+  color: var(--color-ink);
   transition: box-shadow 140ms ease;
   &::placeholder {
     color: var(--color-ash);
   }
   &:focus {
     outline: none;
-    box-shadow: var(--shadow-hard-sm);
+    border-color: var(--color-pink);
+    box-shadow: 4px 4px 0 0 var(--color-pink);
   }
 }
 

@@ -9,19 +9,19 @@ const navLinks = [
   { href: "/#api", label: "API" },
 ];
 
-const linkClass = "rounded-full px-4 py-2 transition-colors hover:bg-ink hover:text-card";
+const linkClass = "rounded-full px-4 py-2 transition-colors hover:bg-ink hover:text-paper";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-ink bg-card">
-      <div className="flex h-16 items-stretch justify-between sm:h-[4.5rem]">
-        <Link className="flex items-center gap-2.5 px-5 sm:px-8" href="/">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+      <div className="flex h-16 items-stretch justify-between sm:h-20">
+        <Link className="flex items-center gap-3 px-5 sm:px-8" href="/">
           <BrandMark />
-          <span className="text-xl font-semibold tracking-tight">agentbond</span>
+          <span className="text-2xl font-medium tracking-tight">agentbond</span>
         </Link>
 
         <div className="flex items-stretch">
-          <nav aria-label="Main" className="hidden items-center gap-1 px-4 text-[17px] lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-1 px-4 text-lg lg:flex">
             {navLinks.map((link) => (
               <Link className={linkClass} href={link.href} key={link.href}>
                 {link.label}
@@ -33,7 +33,7 @@ export function SiteHeader() {
       </div>
       <nav
         aria-label="Main mobile"
-        className="flex gap-1 overflow-x-auto border-t border-ink px-3 py-2 text-[15px] [scrollbar-width:none] lg:hidden"
+        className="flex gap-1 overflow-x-auto border-t border-line px-3 py-2 [scrollbar-width:none] lg:hidden"
       >
         {navLinks.map((link) => (
           <Link className={`whitespace-nowrap ${linkClass}`} href={link.href} key={link.href}>

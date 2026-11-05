@@ -5,10 +5,10 @@ export function ScoreBar({ score, size = "sm" }: { score: number; size?: "sm" | 
   return (
     <div
       aria-hidden
-      className={`overflow-hidden rounded-full border border-ink bg-card ${size === "lg" ? "h-4" : "h-2.5"}`}
+      className={`overflow-hidden rounded-full border border-line bg-card ${size === "lg" ? "h-4" : "h-2.5"}`}
     >
       <div
-        className={`h-full rounded-full border-r border-ink ${scoreTone(score)} ${score === 0 ? "hidden" : ""}`}
+        className={`h-full rounded-full border-r border-line ${scoreTone(score)} ${score === 0 ? "hidden" : ""}`}
         style={{ width: `${score}%` }}
       />
     </div>

@@ -4,9 +4,9 @@ import type { RiskReport } from "@/lib/types/report";
 
 export function ReportsTable({ reports }: { reports: RiskReport[] }) {
   return (
-    <div className="overflow-x-auto rounded-3xl border border-ink bg-card">
-      <table className="w-full min-w-[44rem] text-left text-[15px]">
-        <thead className="border-b border-ink text-graphite">
+    <div className="overflow-x-auto rounded-3xl border border-line bg-card">
+      <table className="w-full min-w-[44rem] text-left text-base">
+        <thead className="border-b border-line text-graphite">
           <tr>
             <th className="px-5 py-4.5 font-normal">Seller</th>
             <th className="px-5 py-4.5 font-normal">Task</th>
@@ -17,9 +17,9 @@ export function ReportsTable({ reports }: { reports: RiskReport[] }) {
             <th className="px-5 py-4.5 text-right font-normal">Checked</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-mist">
+        <tbody className="divide-y divide-line">
           {reports.map((report) => (
-            <tr className="transition-colors hover:bg-paper" key={report.reportId}>
+            <tr className="transition-colors hover:bg-mist" key={report.reportId}>
               <td className="px-5 py-4">
                 <Link className="font-medium underline-offset-4 hover:underline" href={`/reports/${report.reportId}`}>
                   {report.sellerAgentName}
@@ -32,7 +32,7 @@ export function ReportsTable({ reports }: { reports: RiskReport[] }) {
               <td className="px-5 py-4 text-right font-medium tabular-nums">{report.trustScore}</td>
               <td className="px-5 py-4">
                 <span
-                  className={`whitespace-nowrap rounded-full border border-ink px-3 py-0.5 text-[13px] ${verdictTone[report.recommendedAction]}`}
+                  className={`whitespace-nowrap rounded-full border border-black px-3 py-0.5 text-[13px] text-black ${verdictTone[report.recommendedAction]}`}
                 >
                   {verdictLabel[report.recommendedAction]}
                 </span>

@@ -65,14 +65,14 @@ export default async function ReportPage({ params }: Props) {
             <ul className="mt-4 space-y-3">
               {report.reasons.map((reason) => (
                 <li className="flex gap-3 leading-relaxed text-graphite" key={reason}>
-                  <span aria-hidden className="mt-1.5 h-3 w-3 shrink-0 rotate-45 border border-ink bg-lilac" />
+                  <span aria-hidden className="mt-1.5 h-3 w-3 shrink-0 rotate-45 border border-black bg-pink" />
                   {reason}
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className={`nb-card p-8 ${intact ? "bg-mint" : "bg-coral"}`}>
+          <section className={`nb-card p-8 ${intact ? "border-teal" : "border-coral"}`}>
             <h2 className="display text-2xl">Integrity</h2>
             <p className="mt-3 font-medium">
               {intact ? "The stored report matches its hash." : "The stored report does not match its hash."}
