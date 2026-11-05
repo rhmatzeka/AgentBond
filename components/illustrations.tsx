@@ -165,3 +165,64 @@ export function WavingRobot({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+
+/** Wide street scene for the bottom of the page: robots carrying reports and coins along a yellow road. */
+export function StreetScene({ className = "" }: { className?: string }) {
+  const stripes = Array.from({ length: 9 }, (_, index) => 60 + index * 170);
+  return (
+    <svg aria-hidden className={className} preserveAspectRatio="xMidYMax slice" viewBox="0 0 1440 300">
+      <rect fill={TEAL} height="300" width="1440" />
+      <path d="M0 196h1440v62H0z" fill={YELLOW} {...S} />
+      {stripes.map((x) => (
+        <path d={`M${x} 196l40 62M${x + 10} 196l40 62`} fill="none" key={x} {...S} strokeWidth="2" />
+      ))}
+      {[120, 520, 980, 1320].map((x) => (
+        <g key={x}>
+          <path d={`M${x} 196v-70`} {...S} strokeWidth="6" />
+          <circle cx={x} cy={110} fill={x % 3 ? PINK : SKY} r="34" {...S} />
+        </g>
+      ))}
+      {[260, 760, 1160].map((x) => (
+        <path d={`M${x} 196l6-18 6 18M${x + 14} 196l5-14 5 14`} fill="none" key={x} {...S} strokeWidth="2" />
+      ))}
+      <Robot
+        arms={
+          <>
+            <Limb d="M34 112 14 140 30 160" />
+            <Limb d="M86 112 112 128 122 150" />
+          </>
+        }
+        x={300}
+        y={36}
+      />
+      <g transform="rotate(-6 452 150)">
+        <rect fill="#fff" height="72" rx="6" width="56" x="420" y="112" {...S} />
+        <path d="M430 128h34M430 140h22" {...S} />
+        <rect fill={TEAL} height="14" rx="7" width="34" x="430" y="156" {...S} />
+      </g>
+      <Robot
+        arms={
+          <>
+            <Limb d="M34 112 4 100 -8 76" />
+            <Limb d="M86 112 108 140 96 160" />
+          </>
+        }
+        mood="wow"
+        x={820}
+        y={36}
+      />
+      <Coin r={22} x={806} y={70} />
+      <Coin r={16} x={782} y={34} />
+      <Robot
+        arms={
+          <>
+            <Limb d="M34 112 10 130 20 160" />
+            <Limb d="M86 112 116 92 126 64" />
+          </>
+        }
+        x={1180}
+        y={36}
+      />
+    </svg>
+  );
+}

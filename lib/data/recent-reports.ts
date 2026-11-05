@@ -9,3 +9,13 @@ export async function loadRecentReports(limit: number) {
     return [];
   }
 }
+
+/** Total checks run, or null when the store cannot be reached. */
+export async function loadReportCount() {
+  try {
+    return await getReportStore().count();
+  } catch (error) {
+    console.error("Could not count reports", error);
+    return null;
+  }
+}

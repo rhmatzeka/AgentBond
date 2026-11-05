@@ -7,6 +7,8 @@ export type ReportStore = {
   list(limit?: number): Promise<RiskReport[]>;
   /** Records the on-chain anchor unless one is already set. Returns the stored report. */
   setAnchor(reportId: string, anchor: ReportAnchor): Promise<RiskReport | undefined>;
+  /** Number of reports stored. */
+  count(): Promise<number>;
 };
 
 const DEFAULT_LIST_LIMIT = 20;
@@ -31,6 +33,9 @@ export function createMemoryReportStore(capacity = 500): ReportStore {
       if (!report) return undefined;
       if (!report.anchor) reports.set(reportId, { ...report, anchor });
       return reports.get(reportId);
+    },
+    async count() {
+      return reports.size;
     },
   };
 }
@@ -78,6 +83,11 @@ export function createPostgresReportStore(databaseUrl: string): ReportStore {
         where report_id = ${reportId}
         returning report`;
       return rows[0]?.report as RiskReport | undefined;
+    },
+    async count() {
+      await ensureSchema();
+      const rows = await sql`select count(*)::int as total from agentbond_reports`;
+      return Number(rows[0]?.total ?? 0);
     },
   };
 }

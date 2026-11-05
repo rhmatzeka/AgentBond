@@ -23,6 +23,7 @@ describe("memory report store", () => {
     expect((await store.get("b"))?.reportId).toBe("b");
     expect(await store.get("missing")).toBeUndefined();
     expect((await store.list(2)).map((item) => item.reportId)).toEqual(["c", "b"]);
+    expect(await store.count()).toBe(3);
   });
 
   it("evicts the oldest report past its capacity", async () => {

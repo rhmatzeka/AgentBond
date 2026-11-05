@@ -17,7 +17,7 @@ export function SiteHeader() {
       <div className="flex h-16 items-stretch justify-between sm:h-20">
         <Link className="flex items-center gap-3 px-5 sm:px-8" href="/">
           <BrandMark />
-          <span className="text-2xl font-medium tracking-tight">agentbond</span>
+          <span className="text-[1.75rem] font-black tracking-[-0.04em]">agentbond</span>
         </Link>
 
         <div className="flex items-stretch">
