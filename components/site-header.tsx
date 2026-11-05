@@ -1,38 +1,40 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-mark";
 import { WalletConnectButton } from "@/components/wallet-connect-button";
 
 const navLinks = [
-  { href: "/#playground", label: "Playground" },
-  { href: "/demo", label: "Demo agents" },
-  { href: "https://github.com/rhmatzeka/AgentBond#api", label: "API" },
-  { href: "https://github.com/rhmatzeka/AgentBond", label: "GitHub" },
+  { href: "/#check", label: "Check a seller" },
+  { href: "/reports", label: "Reports" },
+  { href: "/demo", label: "Sellers" },
+  { href: "/#api", label: "API" },
 ];
 
 export function SiteHeader() {
   return (
-    <header className="flex w-full items-center justify-between py-5">
-      <Link className="flex items-center gap-3" href="/">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-green font-mono text-sm font-semibold text-black shadow-[0_0_15px_rgba(0,212,164,0.3)]">
-          AB
-        </div>
-        <span className="text-lg font-semibold tracking-tight text-white">AgentBond</span>
-      </Link>
+    <header className="border-b border-rule/70">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-4 sm:px-8">
+        <Link className="flex items-center gap-2.5 text-ink" href="/">
+          <BrandMark />
+          <span className="text-lg font-semibold tracking-tight">AgentBond</span>
+        </Link>
 
-      <nav className="hidden items-center gap-8 text-sm font-medium text-zinc-400 md:flex">
-        {navLinks.map((link) =>
-          link.href.startsWith("http") ? (
-            <a className="transition hover:text-white" href={link.href} key={link.href} rel="noreferrer" target="_blank">
-              {link.label}
-            </a>
-          ) : (
-            <Link className="transition hover:text-white" href={link.href} key={link.href}>
+        <nav aria-label="Main" className="hidden items-center gap-7 text-[15px] text-ink-soft md:flex">
+          {navLinks.map((link) => (
+            <Link className="transition-colors hover:text-ink" href={link.href} key={link.href}>
               {link.label}
             </Link>
-          ),
-        )}
-      </nav>
+          ))}
+        </nav>
 
-      <WalletConnectButton />
+        <WalletConnectButton />
+      </div>
+      <nav aria-label="Main mobile" className="flex gap-5 overflow-x-auto px-5 pb-3 text-sm text-ink-soft md:hidden">
+        {navLinks.map((link) => (
+          <Link className="whitespace-nowrap hover:text-ink" href={link.href} key={link.href}>
+            {link.label}
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }

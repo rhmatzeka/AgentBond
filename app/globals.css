@@ -1,51 +1,78 @@
 @import "tailwindcss";
+
 @theme {
-  --color-brand-green: #00d4a4;
-  --color-brand-green-deep: #00b48a;
-  --color-canvas-dark: #01090d;
-  --color-surface-code: #0b1519;
-  --color-hairline-dark: #12252c;
-  --font-sans: var(--font-geist-sans), Inter, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --color-paper: #eef1f4;
+  --color-sheet: #fbfcfd;
+  --color-ink: #10203a;
+  --color-ink-soft: #4f607a;
+  --color-ink-faint: #8593a7;
+  --color-rule: #cfd6df;
+  --color-pen: #2346d8;
+  --color-pen-deep: #1a35a8;
+  --color-hire: #1e7a4c;
+  --color-verify: #a8690b;
+  --color-avoid: #b3261e;
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-:root {
-  --background: #01090d;
-  --foreground: #ffffff;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: #01090d;
-  color: #ffffff;
+  background: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  font-optical-sizing: auto;
 }
 
 ::selection {
-  background: #00d4a4;
-  color: #0a0a0a;
+  background: #c9d3ff;
+  color: var(--color-ink);
 }
 
-/* Single combined background matching Vibedesign exactly (Teal glow + Subtle stars grid) */
-.bg-vibe-theme {
-  background: 
-    /* Top layer: Subtle star/dot pattern grid */
-    radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) repeat,
-    /* Bottom layer: Rich cyan-teal radial glow centered at the top-middle */
-    radial-gradient(circle at 50% 0px, #0b4352 0%, #031720 50%, #01090d 100%);
-  background-size: 36px 36px, auto;
-  background-attachment: scroll, scroll;
+:focus-visible {
+  outline: 2px solid var(--color-pen);
+  outline-offset: 2px;
 }
 
-.bg-panel-glow {
-  background: linear-gradient(180deg, rgba(11, 67, 82, 0.25) 0%, rgba(3, 23, 32, 0.4) 100%);
-  border: 1px solid rgba(0, 212, 164, 0.15);
+/* The report slip: a printed sheet with a perforated top edge. */
+.slip {
+  background: var(--color-sheet);
+  box-shadow:
+    0 1px 0 rgb(16 32 58 / 0.04),
+    0 18px 40px -24px rgb(16 32 58 / 0.35);
+  -webkit-mask: radial-gradient(circle 5px at 50% 0, transparent 98%, #000) 0 0 / 18px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 50% 0, transparent 98%, #000) 0 0 / 18px 100% repeat-x;
 }
 
-.glow-hover {
-  transition: all 0.3s ease;
+/* Rubber-stamp verdict. The texture keeps it from reading as a flat badge. */
+.stamp {
+  border: 3px double currentColor;
+  -webkit-mask: radial-gradient(circle at 30% 40%, #000 55%, rgb(0 0 0 / 0.78) 100%);
+  mask: radial-gradient(circle at 30% 40%, #000 55%, rgb(0 0 0 / 0.78) 100%);
 }
-.glow-hover:hover {
-  box-shadow: 0 0 30px rgba(0, 212, 164, 0.2);
-  border-color: rgba(0, 212, 164, 0.5);
+
+@media (prefers-reduced-motion: no-preference) {
+  .stamp-land {
+    animation: stamp-land 360ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  }
+}
+
+@keyframes stamp-land {
+  from {
+    opacity: 0;
+    transform: rotate(var(--stamp-rotate, -8deg)) scale(1.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(var(--stamp-rotate, -8deg)) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

@@ -1,39 +1,90 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ReportResult } from "@/components/report-result";
-import { SiteHeader } from "@/components/site-header";
-import { getReport } from "@/lib/data/reports-store";
+import { notFound } from "next/navigation";
+import { cache } from "react";
+import { AnchorPanel } from "@/components/anchor-panel";
+import { ReportSlip } from "@/components/report-slip";
+import { getReportStore } from "@/lib/data/reports-store";
+import { verdictLabel } from "@/lib/format";
+import { verifyReportHash } from "@/lib/web3/report-hash";
 
-export const dynamic = "force-dynamic";
+const loadReport = cache((reportId: string) => getReportStore().get(reportId));
 
-export default async function ReportPage({ params }: { params: Promise<{ reportId: string }> }) {
-  const { reportId } = await params;
-  const report = getReport(reportId);
+type Props = { params: Promise<{ reportId: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const report = await loadReport((await params).reportId);
+  if (!report) return { title: "Report not found" };
+  return {
+    title: `${report.sellerAgentName} scored ${report.trustScore}`,
+    description: `${verdictLabel[report.recommendedAction]}: ${report.paymentRecommendation}`,
+  };
+}
+
+export default async function ReportPage({ params }: Props) {
+  const report = await loadReport((await params).reportId);
+  if (!report) notFound();
+
+  const intact = verifyReportHash(report);
+  const created = new Date(report.createdAt);
 
   return (
-    <main className="bg-vibe-theme min-h-screen text-white">
-      <div className="mx-auto max-w-3xl px-6 pb-16">
-        <SiteHeader />
-        <Link className="font-mono text-xs text-zinc-400 transition hover:text-white" href="/#playground">
-          ← Back to playground
-        </Link>
+    <main className="mx-auto max-w-6xl px-5 pb-24 pt-10 sm:px-8">
+      <Link className="text-sm text-pen hover:underline" href="/reports">
+        All reports
+      </Link>
+      <h1 className="mt-4 text-4xl font-bold tracking-tight [font-stretch:85%] sm:text-5xl">
+        Risk report for {report.sellerAgentName}
+      </h1>
+      <p className="mt-2 text-ink-soft">
+        Checked on{" "}
+        <time dateTime={report.createdAt}>
+          {created.toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "UTC" })} UTC
+        </time>
+      </p>
 
-        {report ? (
-          <div className="mt-6 space-y-4">
-            <h1 className="text-3xl font-semibold tracking-tight">Risk report for {report.sellerAgentName}</h1>
-            <p className="font-mono text-xs text-zinc-500">
-              {report.taskType} · created {new Date(report.createdAt).toUTCString()}
+      <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)]">
+        <ReportSlip report={report}>
+          <AnchorPanel report={report} />
+        </ReportSlip>
+
+        <div className="space-y-10">
+          <section>
+            <h2 className="text-xl font-semibold">What was checked</h2>
+            <p className="mt-2 leading-relaxed text-ink-soft">
+              {report.sampleTask ? (
+                <>&ldquo;{report.sampleTask}&rdquo;</>
+              ) : (
+                "No task description was sent with this check."
+              )}
             </p>
-            <ReportResult report={report} />
-          </div>
-        ) : (
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-8">
-            <h1 className="text-2xl font-semibold tracking-tight">Report not found</h1>
-            <p className="mt-3 break-all text-sm leading-6 text-zinc-400">
-              No report with ID <span className="font-mono">{reportId}</span>. Reports are kept in memory in this MVP,
-              so they disappear when the server restarts. Run a new check from the playground.
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold">Why this verdict</h2>
+            <ul className="mt-3 space-y-2.5">
+              {report.reasons.map((reason) => (
+                <li className="border-l-2 border-rule pl-4 leading-relaxed text-ink-soft" key={reason}>
+                  {reason}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold">Integrity</h2>
+            <p className={`mt-2 font-medium ${intact ? "text-hire" : "text-avoid"}`}>
+              {intact ? "The stored report matches its hash." : "The stored report does not match its hash."}
             </p>
-          </div>
-        )}
+            <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+              The hash is a SHA-256 of every field in the report. Recomputing it from the{" "}
+              <a className="text-pen hover:underline" href={`/api/reports/${report.reportId}`}>
+                raw JSON
+              </a>{" "}
+              and comparing it with the value on Base proves nobody edited the verdict afterwards.
+            </p>
+          </section>
+        </div>
       </div>
     </main>
   );
