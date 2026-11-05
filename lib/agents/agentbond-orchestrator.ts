@@ -1,8 +1,8 @@
 import { getDemoAgent } from "@/lib/data/demo-agents";
+import { getDefaultQualityJudge, type QualityJudge } from "@/lib/llm/quality-judge";
 import { calculateRecommendedMaxPrice } from "@/lib/scoring/pricing-score";
 import { calculateTrustScore, getRecommendedAction, getRiskLevel } from "@/lib/scoring/trust-score";
 import type { RiskCheckRequest, RiskLevel, RiskReport } from "@/lib/types/report";
-import { createId } from "@/lib/utils/ids";
 import { hashReport } from "@/lib/web3/report-hash";
 import { runOutputQualityChecker } from "./output-quality-checker";
 import { runPricingBenchmarkChecker } from "./pricing-benchmark-checker";
@@ -16,18 +16,27 @@ export class UnknownSellerAgentError extends Error {
 }
 
 const paymentRecommendations: Record<RiskLevel, string> = {
-  low: "Hire, but do not overpay above the recommended max price.",
-  medium: "Use milestone payment or verify delivery before full payment.",
-  high: "Avoid this seller or require strong manual verification before payment.",
+  low: "Hire, but do not pay above the recommended max price.",
+  medium: "Pay per milestone, or verify the delivery before releasing the full amount.",
+  high: "Avoid this seller, or verify the work by hand before any payment.",
 };
 
-export function generateRiskReport(request: RiskCheckRequest): RiskReport {
+const MAX_SAMPLE_TASK_CHARS = 500;
+
+export async function generateRiskReport(
+  request: RiskCheckRequest,
+  deps: { judge?: QualityJudge | null } = {},
+): Promise<RiskReport> {
   const agent = getDemoAgent(request.sellerAgentId);
   if (!agent) {
     throw new UnknownSellerAgentError(request.sellerAgentId);
   }
 
-  const outputQuality = runOutputQualityChecker(agent, request.sampleOutput || agent.sampleOutput);
+  const judge = deps.judge === undefined ? getDefaultQualityJudge() : deps.judge;
+  const outputQuality = await runOutputQualityChecker(
+    { taskType: request.taskType, task: request.sampleTask, output: request.sampleOutput.trim() || agent.sampleOutput },
+    judge,
+  );
   const pricing = runPricingBenchmarkChecker({
     taskType: request.taskType,
     proposedPriceUsdc: request.proposedPriceUsdc,
@@ -44,29 +53,26 @@ export function generateRiskReport(request: RiskCheckRequest): RiskReport {
   };
   const trustScore = calculateTrustScore(checks);
   const riskLevel = getRiskLevel(trustScore);
-  const recommendedAction = getRecommendedAction(trustScore);
-  const recommendedMaxPriceUsdc = calculateRecommendedMaxPrice(request.taskType);
-  const reasons = [outputQuality.notes[0], pricing.notes[0], reputation.notes[0], taskFit.notes[0]];
+  const checkerResults = [outputQuality, pricing, reputation, taskFit];
 
   const reportWithoutHash = {
-    reportId: createId("report"),
+    reportId: `report_${crypto.randomUUID().replaceAll("-", "").slice(0, 20)}`,
     sellerAgentId: agent.id,
     sellerAgentName: agent.name,
     taskType: request.taskType,
+    sampleTask: request.sampleTask.slice(0, MAX_SAMPLE_TASK_CHARS),
+    proposedPriceUsdc: request.proposedPriceUsdc,
     trustScore,
     riskLevel,
-    recommendedAction,
-    recommendedMaxPriceUsdc,
+    recommendedAction: getRecommendedAction(trustScore),
+    recommendedMaxPriceUsdc: calculateRecommendedMaxPrice(request.taskType, riskLevel),
     paymentRecommendation: paymentRecommendations[riskLevel],
-    reasons,
-    checkerResults: [outputQuality, pricing, reputation, taskFit],
+    reasons: checkerResults.map((result) => result.notes[0]),
+    checkerResults,
     checks,
-    capOrderId: request.capOrderId || createId("cap_demo_order"),
+    capOrderId: request.capOrderId ?? null,
     createdAt: new Date().toISOString(),
   };
 
-  return {
-    ...reportWithoutHash,
-    reportHash: hashReport(reportWithoutHash),
-  };
+  return { ...reportWithoutHash, reportHash: hashReport(reportWithoutHash) };
 }

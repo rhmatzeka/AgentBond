@@ -1,8 +1,12 @@
 import { pricingBenchmarks } from "@/lib/data/pricing-benchmarks";
 import type { TaskType } from "@/lib/types/agent";
+import type { RiskLevel } from "@/lib/types/report";
 
-export function calculateRecommendedMaxPrice(taskType: TaskType) {
-  return pricingBenchmarks[taskType].max;
+/** Price ceiling for the buyer: the full benchmark for low risk, its floor for high risk. */
+export function calculateRecommendedMaxPrice(taskType: TaskType, riskLevel: RiskLevel) {
+  const { min, max } = pricingBenchmarks[taskType];
+  const ceiling = { low: max, medium: (min + max) / 2, high: min }[riskLevel];
+  return Math.round(ceiling * 100) / 100;
 }
 
 export function calculatePricingScore(params: {
