@@ -12,7 +12,7 @@ export function WalletConnectButton() {
   if (isConnected && address) {
     return (
       <button
-        className="rounded-full border border-rule bg-sheet px-4 py-2 font-mono text-[13px] text-ink transition-colors hover:border-ink-faint"
+        className="nb-btn bg-card px-3.5 py-2 font-mono text-[13px] font-medium"
         onClick={() => disconnect()}
         title="Disconnect wallet"
         type="button"
@@ -24,7 +24,7 @@ export function WalletConnectButton() {
 
   return (
     <button
-      className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-sheet transition-colors hover:bg-pen-deep disabled:opacity-50"
+      className="nb-btn bg-ink px-4 py-2 text-sm text-card"
       disabled={!connector || isPending}
       onClick={() => connector && connect({ connector })}
       title={connector ? undefined : "Install a browser wallet such as MetaMask or Rabby"}

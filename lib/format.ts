@@ -17,13 +17,6 @@ export const riskLabel: Record<RiskLevel, string> = {
   high: "High risk",
 };
 
-/** Tailwind text color per verdict, shared by the stamp, score bars and tables. */
-export const verdictColor: Record<RecommendedAction, string> = {
-  hire: "text-hire",
-  verify: "text-verify",
-  avoid: "text-avoid",
-};
-
 export const checkerLabel: Record<string, { name: string; weight: number; asks: string }> = {
   OutputQualityChecker: { name: "Output quality", weight: 40, asks: "Does the sample answer the task, with sources?" },
   ReputationChecker: { name: "Reputation", weight: 30, asks: "Completion rate, rating, buyer diversity, refunds." },

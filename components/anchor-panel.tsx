@@ -35,13 +35,13 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
 
   if (anchor) {
     return (
-      <div className="mt-5 border-t border-dashed border-rule pt-4 text-sm">
-        <p className="font-medium text-hire">Anchored on {registryChain.name}</p>
-        <p className="mt-1 text-ink-soft">
+      <div className="mt-3 border-t-2 border-ink pt-3 text-sm">
+        <p className="font-bold text-ink">Anchored on {registryChain.name}</p>
+        <p className="mt-1">
           Block {anchor.blockNumber.toLocaleString("en-US")}, registered by{" "}
           <code className="font-mono text-[13px] text-ink">{shortHex(anchor.requester)}</code>.{" "}
           <a
-            className="text-pen underline-offset-2 hover:underline"
+            className="font-semibold text-ink underline decoration-2 underline-offset-2"
             href={explorerTxUrl(anchor.txHash)}
             rel="noreferrer"
             target="_blank"
@@ -55,7 +55,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
 
   if (!isRegistryConfigured) {
     return (
-      <p className="mt-5 border-t border-dashed border-rule pt-4 text-sm text-ink-soft">
+      <p className="mt-3 border-t-2 border-ink pt-3 text-sm">
         On-chain anchoring turns on once the registry contract is deployed.
       </p>
     );
@@ -118,13 +118,13 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
   }
 
   return (
-    <div className="mt-5 border-t border-dashed border-rule pt-4">
-      <p className="text-sm text-ink-soft">
+    <div className="mt-3 border-t-2 border-ink pt-3">
+      <p className="text-sm">
         Anchoring writes this hash to the AgentBond registry on {registryChain.name}, so anyone can prove the report
         existed and was not edited later.
       </p>
       <button
-        className="mt-3 w-full rounded-md border border-ink/80 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-ink hover:text-sheet disabled:pointer-events-none disabled:opacity-50"
+        className="nb-btn mt-3 w-full bg-card text-sm"
         disabled={action.disabled}
         onClick={action.run}
         type="button"
@@ -132,7 +132,7 @@ export function AnchorPanel({ report, onAnchored }: { report: RiskReport; onAnch
         {action.label}
       </button>
       {error && (
-        <p className="mt-2 text-sm text-avoid" role="alert">
+        <p className="mt-2 border-l-4 border-ink pl-2 text-sm font-semibold text-ink" role="alert">
           {error}
         </p>
       )}

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], axes: ["opsz", "wdth"] });
-const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"] });
+const schibsted = Schibsted_Grotesk({ variable: "--font-schibsted", subsets: ["latin"] });
+const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://agentbond.rahmateka.my.id";
 
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html className={`${bricolage.variable} ${jetbrains.variable} antialiased`} lang="en">
+    <html className={`${schibsted.variable} ${plexMono.variable} antialiased`} lang="en">
       <body className="flex min-h-dvh flex-col">
         <Providers>
           <SiteHeader />

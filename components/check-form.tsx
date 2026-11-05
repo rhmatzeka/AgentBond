@@ -11,9 +11,6 @@ import type { RiskReport } from "@/lib/types/report";
 const taskTypes: TaskType[] = ["research", "summary", "code_review", "data_extraction"];
 const defaultTask = "Find 5 sources about Base ecosystem growth";
 
-const fieldClass =
-  "w-full rounded-md border border-rule bg-sheet px-3.5 py-2.5 text-[15px] text-ink placeholder:text-ink-faint transition-colors hover:border-ink-faint focus:border-pen focus:outline-none focus:ring-2 focus:ring-pen/20";
-
 export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
   const [seller, setSeller] = useState(sellers[0]);
   const [taskType, setTaskType] = useState<TaskType>(sellers[0].taskTypes[0]);
@@ -78,35 +75,41 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
       <form className="space-y-8" onSubmit={runCheck}>
         <fieldset>
-          <legend className="text-lg font-semibold">Who is selling?</legend>
-          <p className="mt-1 text-sm text-ink-soft">Four demo sellers with very different track records.</p>
-          <div className="mt-4 divide-y divide-rule/70 overflow-hidden rounded-lg border border-rule bg-sheet">
+          <legend className="text-lg font-extrabold">Who is selling?</legend>
+          <p className="mt-1 text-sm text-graphite">Four demo sellers with very different track records.</p>
+          <div className="nb-card mt-4 divide-y-2 divide-ink">
             {sellers.map((item) => {
               const total = item.completedJobs + item.failedJobs;
               return (
                 <label
-                  className="flex cursor-pointer items-start gap-3.5 px-4 py-3.5 transition-colors hover:bg-paper/60 has-[:checked]:bg-pen/[0.06]"
+                  className="group flex cursor-pointer items-start gap-3.5 px-4 py-3.5 transition-colors hover:bg-paper has-[:checked]:bg-ink has-[:checked]:text-card"
                   key={item.id}
                 >
                   <input
                     checked={item.id === seller.id}
-                    className="mt-1.5 accent-pen"
+                    className="peer sr-only"
                     name="seller"
                     onChange={() => pickSeller(item)}
                     type="radio"
                     value={item.id}
                   />
+                  <span
+                    aria-hidden
+                    className="mt-1 grid h-4 w-4 shrink-0 place-items-center border-2 border-current peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
+                  >
+                    <span className="hidden h-2 w-2 bg-current group-has-[:checked]:block" />
+                  </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="font-semibold">{item.name}</span>
-                      <span className="whitespace-nowrap text-sm tabular-nums text-ink-soft">
-                        asks {formatUsdc(item.defaultPriceUsdc)}
+                      <span className="font-bold">{item.name}</span>
+                      <span className="whitespace-nowrap font-mono text-sm tabular-nums">
+                        {formatUsdc(item.defaultPriceUsdc)}
                       </span>
                     </span>
-                    <span className="mt-0.5 block text-sm text-ink-soft">{item.description}</span>
-                    <span className="mt-1 block text-xs tabular-nums text-ink-faint">
-                      {item.completedJobs} of {total} jobs done, {item.uniqueBuyers}{" "}
-                      {item.uniqueBuyers === 1 ? "buyer" : "buyers"}, rated {item.averageRating} of 5
+                    <span className="mt-0.5 block text-sm opacity-75">{item.description}</span>
+                    <span className="mt-1 block font-mono text-xs tabular-nums opacity-60">
+                      {item.completedJobs}/{total} jobs done, {item.uniqueBuyers}{" "}
+                      {item.uniqueBuyers === 1 ? "buyer" : "buyers"}, rated {item.averageRating}/5
                     </span>
                   </span>
                 </label>
@@ -117,9 +120,9 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <label className="grid gap-1.5">
-            <span className="text-sm font-medium">Task type</span>
+            <span className="text-sm font-bold">Task type</span>
             <select
-              className={fieldClass}
+              className="nb-field"
               onChange={(event) => setTaskType(event.target.value as TaskType)}
               value={taskType}
             >
@@ -132,9 +135,9 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
             </select>
           </label>
           <label className="grid gap-1.5">
-            <span className="text-sm font-medium">Quoted price in USDC</span>
+            <span className="text-sm font-bold">Quoted price in USDC</span>
             <input
-              className={`${fieldClass} tabular-nums`}
+              className="nb-field font-mono tabular-nums"
               inputMode="decimal"
               min={0}
               onChange={(event) => setPrice(event.target.value)}
@@ -146,39 +149,30 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
         </div>
 
         <label className="grid gap-1.5">
-          <span className="text-sm font-medium">What your agent asked for</span>
-          <input
-            className={fieldClass}
-            maxLength={500}
-            onChange={(event) => setTask(event.target.value)}
-            value={task}
-          />
+          <span className="text-sm font-bold">What your agent asked for</span>
+          <input className="nb-field" maxLength={500} onChange={(event) => setTask(event.target.value)} value={task} />
         </label>
 
         <label className="grid gap-1.5">
-          <span className="text-sm font-medium">Sample of the seller&apos;s work</span>
+          <span className="text-sm font-bold">Sample of the seller&apos;s work</span>
           <textarea
-            className={`${fieldClass} min-h-28 leading-relaxed`}
+            className="nb-field min-h-28 leading-relaxed"
             maxLength={10_000}
             onChange={(event) => setOutput(event.target.value)}
             rows={4}
             value={output}
           />
-          <span className="text-xs text-ink-faint">
+          <span className="text-xs text-graphite">
             Paste any output. It is graded on its text, not on who wrote it.
           </span>
         </label>
 
         <div className="flex flex-wrap items-center gap-4">
-          <button
-            className="rounded-md bg-pen px-6 py-3 font-semibold text-sheet shadow-[0_6px_16px_-8px_var(--color-pen)] transition-colors hover:bg-pen-deep disabled:opacity-60"
-            disabled={isPending}
-            type="submit"
-          >
+          <button className="nb-btn bg-ink px-6 text-card" disabled={isPending} type="submit">
             {isPending ? "Checking the seller…" : "Run credit check"}
           </button>
           {error && (
-            <p className="text-sm text-avoid" role="alert">
+            <p className="border-l-4 border-ink pl-2 text-sm font-semibold" role="alert">
               {error}
             </p>
           )}
@@ -187,19 +181,22 @@ export function CheckForm({ sellers }: { sellers: SellerAgent[] }) {
 
       <div aria-live="polite" className="scroll-mt-4" ref={resultRef}>
         {report ? (
-          <div className="space-y-3">
-            <ReportSlip animateStamp key={report.reportId} report={report}>
+          <div className="space-y-4">
+            <ReportSlip animateVerdict key={report.reportId} report={report}>
               <AnchorPanel key={report.reportId} onAnchored={setReport} report={report} />
             </ReportSlip>
-            <Link className="block text-right text-sm text-pen hover:underline" href={`/reports/${report.reportId}`}>
+            <Link
+              className="block text-right text-sm font-bold underline decoration-2 underline-offset-4 hover:no-underline"
+              href={`/reports/${report.reportId}`}
+            >
               Open the shareable report
             </Link>
           </div>
         ) : (
-          <div className="grid min-h-56 place-items-center lg:min-h-[28rem] rounded-lg border-2 border-dashed border-rule px-8 text-center">
+          <div className="grid min-h-56 place-items-center border-2 border-dashed border-ink px-8 text-center lg:min-h-[30rem]">
             <div>
-              <p className="font-semibold">{isPending ? "Grading the sample…" : "No report yet"}</p>
-              <p className="mt-1 text-sm text-ink-soft">
+              <p className="font-extrabold">{isPending ? "Grading the sample…" : "No report yet"}</p>
+              <p className="mt-1 text-sm text-graphite">
                 {isPending
                   ? "Quality, price, reputation and task fit are being scored."
                   : "Pick a seller and run a check. The report prints here."}

@@ -61,6 +61,8 @@ npm run deploy:base-sepolia
 
 After deploying the contract, put its address in `NEXT_PUBLIC_AGENTBOND_CONTRACT_ADDRESS` and restart the app.
 
+`scripts/set-vercel-env.sh` copies `DATABASE_URL` and the `LLM_*` values from `.env` to the Vercel production environment without printing them, and removes variables the app no longer reads.
+
 ## API
 
 ### Run a check
